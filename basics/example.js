@@ -6,12 +6,30 @@ const observer = {
     complete: () => console.log('complete!')
 }
 const observable = new Observable(subcriber => {
-    subcriber.next('Hello');
-    subcriber.next('World');
-    subcriber.complete();
-    
+    // subcriber.next('Hello');
+    // subcriber.next('World');
+    // subcriber.complete();
+    let count = 0;
+    const id = setInterval(()=> {
+        subcriber.next(count);
+        // subcriber.complete();
+        count +=1;
+    }, 1000);
 
+    return () => {
+        console.log('Called');
+        clearInterval(id);
+    }
 });
 
-observable.subscribe(observer)
+// console.log('Before');
+const subscription = observable.subscribe(observer);
+const subscription2 = observable.subscribe(observer);
+// console.log('After');
+
+subscription.add(subscription2)
+setTimeout(() => {
+    subscription.unsubscribe()
+    // subscription2.unsubscribe()
+}, 3500);
 
