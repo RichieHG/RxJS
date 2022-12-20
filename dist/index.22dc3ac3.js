@@ -532,6 +532,7 @@ function hmrAcceptRun(bundle, id) {
 }
 
 },{}],"jL2mp":[function(require,module,exports) {
+// @ts-nocheck
 var _rxjs = require("rxjs");
 // function hello(){
 //     return 'Hello World!'
@@ -585,8 +586,246 @@ const observer = {
 // const source$ = from(iterator);
 // source$.subscribe(observer);
 // const timer$ = interval(1000);
-const timer$ = (0, _rxjs.timer)(2000, 1000);
-timer$.subscribe(console.log);
+// const timer$ = timer(2000, 1000);
+// timer$.subscribe(console.log)
+// of(1,2,3,4,5).pipe(
+//     map(value => value * 10)
+// )
+// .subscribe(console.log);
+// @ts-ignore
+// const keyup$ = fromEvent(document,'keyup');
+// const keycode$ = keyup$.pipe(
+//     map(event => event)
+// );
+// const keycodeWithPluck$ = keyup$.pipe(
+//     pluck('code'),
+//     // pluck('target','nodeName') // ==  map(event => event.target.nodeName).
+// );
+// const pressed$ = keyup$.pipe(
+//     // mapTo('Key Pressed!')
+//     map(() => 'Key Pressed!')
+// )
+// pressed$.subscribe(console.log)
+//#region Filter Operator
+// of(1,2,3,4,5).pipe(
+//     filter(value => value > 2)
+// ).subscribe(console.log)
+// const keyup$ = fromEvent(document, 'keyup');
+// const keycode$ = keyup$.pipe(
+//     map(event => event.code)
+// );
+// const enter$ = keycode$.pipe(
+//     filter(code => code === 'Enter')
+// )
+// enter$.subscribe(console.log)
+// keycode$.subscribe(console.log)
+//#endregion
+//#region Scroll Progress Bar
+// function calculateScrollPercent(element) {
+//     const {
+//         scrollTop,
+//         scrollHeight,
+//         clientHeight
+//     } = element;
+//     return (scrollTop/ (scrollHeight - clientHeight)) *100;
+// }
+// const progressBar = document.querySelector('.progress-bar');
+// const scroll$ =  fromEvent(document,'scroll');
+// const progress$ = scroll$.pipe(
+//     map(({target}) => calculateScrollPercent(target.documentElement))
+// )
+// progress$.subscribe(perecent => {
+//     progressBar.style.width = `${perecent}%`
+// });
+//#endregion
+//#region Reduce
+// const numbers = [1,2,3,4,5];
+// const totalReducer = (accumulator, currentValue) => {
+//     return accumulator + currentValue
+// };
+// // const total = numbers.reduce(totalReducer,0);
+// // console.log(total);
+// // from(numbers).pipe(
+// //     reduce(totalReducer, 0)
+// // ).subscribe(console.log)
+// interval(1000).pipe(
+//     take(3),
+//     reduce(totalReducer, 0)
+// ).subscribe({
+//     next: console.log,
+//     complete: () => console.log('Complete!')
+//     })
+//#endregion
+//#region Scan
+// const numbers = [1,2,3,4,5];
+// const user = [
+//     {name: 'Brian', loggedIn: false, token: null},
+//     {name: 'Luis', loggedIn: true, token: '123'},
+//     {name: 'Joshue', loggedIn: true, token: 'abc'}
+// ]
+// // from(numbers).pipe(
+// //     scan((accumulator, currentValue) => {
+// //         return accumulator + currentValue;
+// //     }, 0)
+// // ).subscribe(console.log)
+// const state$ = from(user).pipe(
+//     scan((accumulator, currentValue) => {
+//         return {...accumulator, ...currentValue}
+//     }, {})
+// );
+// const name$ = state$.pipe(
+//     map(state => state.name)
+// );
+// name$.subscribe(console.log)
+//#endregion
+//#region Countdown-Timer
+// const countdown = document.querySelector('#countdown');
+// const message = document.querySelector('#message');
+// const counter$ = interval(1000);
+// counter$.pipe(
+//     map(() => -1),
+//     scan((accumulator, currentValue)=> {
+//         return accumulator + currentValue;
+//     },10),
+//     filter(value => value >= 0)
+// ).subscribe(
+//  {
+//     next: value => {
+//         countdown.innerHTML = value;
+//         if(!value){
+//             message.innerHTML = 'Liftoff!'
+//         }
+//     },
+//     complete: () => console.log('Finish!')
+// });
+//#endregion
+//#region Tap
+// const numbers$ = of(1,2,3,4,5);
+// numbers$.pipe(
+//     tap(value => console.log('before', value)),
+//     map(value => value * 10),
+//     tap({
+//         next: value => console.log('after', value),
+//         complete: () => console.log('done')
+//     })
+// )
+// .subscribe(value => {
+//     console.log('from subscribe', value)
+// })
+//#endregion
+//#region Take
+// const numbers$ = of(1,2,3,4,5);
+// const click$ = fromEvent(document, 'click');
+// click$.pipe(
+//     map(event => ({
+//         x: event.clientX,
+//         y: event.clientY
+//     })),
+//     // filter, take(1)
+//     first(({y}) => y > 200)
+// ).subscribe({
+//     next: console.log,
+//     complete: () => console.log('Complete!')
+// })
+//#endregion
+//#region TakeWhile
+// const click$ = fromEvent(document, 'click');
+// click$.pipe(
+//     map(event => ({
+//         x: event.clientX,
+//         y: event.clientY
+//     })),
+//     takeWhile(({y}) => y <= 200, true)
+// ).subscribe({
+//     next: console.log,
+//     complete: () => console.log('Complete!')
+// })
+// const countdown = document.querySelector('#countdown');
+// const message = document.querySelector('#message');
+// const counter$ = interval(1000);
+// counter$.pipe(
+//     map(() => -1),
+//     scan((accumulator, currentValue)=> {
+//         return accumulator + currentValue;
+//     },5),
+//     tap(console.log),
+//     takeWhile(value => value >= 0)
+// ).subscribe(
+//  {
+//     next: value => {
+//         countdown.innerHTML = value;
+//         if(!value){
+//             message.innerHTML = 'Liftoff!'
+//         }
+//     },
+//     complete: () => console.log('Finish!')
+// });
+//#endregion
+//#region TakeUntil
+// const counter$ = interval(1000);
+// const click$ = fromEvent(document, 'click');
+// counter$.pipe(
+//     takeUntil(click$)
+// ).subscribe(console.log);
+// const countdown = document.querySelector('#countdown');
+// const message = document.querySelector('#message');
+// const abortButton = document.querySelector('#abort')
+// const counter$ = interval(1000);
+// const abortClick$ = fromEvent(abortButton, 'click');
+// counter$.pipe(
+//     map(() => -1),
+//     scan((accumulator, currentValue)=> {
+//         return accumulator + currentValue;
+//     },5),
+//     tap(console.log),
+//     takeWhile(value => value >= 0),
+//     takeUntil(abortClick$)
+// ).subscribe(
+//  {
+//     next: value => {
+//         countdown.innerHTML = value;
+//         if(!value){
+//             message.innerHTML = 'Liftoff!'
+//         }
+//     },
+//     complete: () => console.log('Finish!')
+// });
+//#endregion
+//#region DistinctUntilChanged
+// const numbers$ = of(1,'1',2,3,3,3,4,5,3);
+// numbers$.pipe(
+//     distinctUntilChanged()
+// ).subscribe(console.log)
+const user = [
+    {
+        name: "Brian",
+        loggedIn: false,
+        token: null
+    },
+    // { name: 'Louis', loggedIn: true, token: '123' },
+    {
+        name: "Brian",
+        loggedIn: false,
+        token: null
+    },
+    {
+        name: "Brian",
+        loggedIn: true,
+        token: "abc"
+    }
+];
+const state$ = (0, _rxjs.from)(user).pipe((0, _rxjs.scan)((accumulator, currentValue)=>{
+    return {
+        ...accumulator,
+        ...currentValue
+    };
+}, {}));
+const name$ = state$.pipe(// distinctUntilChanged((previousValue, currentValue) => {
+//     return previousValue.name === currentValue.name
+// }),
+(0, _rxjs.distinctUntilKeyChanged)("name"), (0, _rxjs.map)((state)=>state.name));
+name$.subscribe(console.log) //#endregion
+;
 
 },{"rxjs":"lLy7s"}],"lLy7s":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -931,7 +1170,7 @@ var _withLatestFrom = require("./internal/operators/withLatestFrom");
 var _zipAll = require("./internal/operators/zipAll");
 var _zipWith = require("./internal/operators/zipWith");
 
-},{"./internal/Observable":"4Jvxr","./internal/observable/ConnectableObservable":false,"./internal/symbol/observable":"byHtV","./internal/observable/dom/animationFrames":false,"./internal/Subject":false,"./internal/BehaviorSubject":false,"./internal/ReplaySubject":false,"./internal/AsyncSubject":false,"./internal/scheduler/asap":false,"./internal/scheduler/async":"bKyC1","./internal/scheduler/queue":false,"./internal/scheduler/animationFrame":false,"./internal/scheduler/VirtualTimeScheduler":false,"./internal/Scheduler":"90yvc","./internal/Subscription":"lFyhg","./internal/Subscriber":"1VFFQ","./internal/Notification":false,"./internal/util/pipe":"1GN6U","./internal/util/noop":"l8uEm","./internal/util/identity":"8Xfg6","./internal/util/isObservable":false,"./internal/lastValueFrom":false,"./internal/firstValueFrom":false,"./internal/util/ArgumentOutOfRangeError":false,"./internal/util/EmptyError":false,"./internal/util/NotFoundError":false,"./internal/util/ObjectUnsubscribedError":false,"./internal/util/SequenceError":false,"./internal/operators/timeout":false,"./internal/util/UnsubscriptionError":"GSF7Z","./internal/observable/bindCallback":false,"./internal/observable/bindNodeCallback":false,"./internal/observable/combineLatest":false,"./internal/observable/concat":false,"./internal/observable/connectable":false,"./internal/observable/defer":false,"./internal/observable/empty":"dGHVG","./internal/observable/forkJoin":false,"./internal/observable/from":"dBWag","./internal/observable/fromEvent":"eTJLc","./internal/observable/fromEventPattern":false,"./internal/observable/generate":false,"./internal/observable/iif":false,"./internal/observable/interval":"5Ox1i","./internal/observable/merge":false,"./internal/observable/never":false,"./internal/observable/of":"lnQPU","./internal/observable/onErrorResumeNext":false,"./internal/observable/pairs":false,"./internal/observable/partition":false,"./internal/observable/race":false,"./internal/observable/range":"b4lqr","./internal/observable/throwError":false,"./internal/observable/timer":"lbPdw","./internal/observable/using":false,"./internal/observable/zip":false,"./internal/scheduled/scheduled":"l8eo2","./internal/types":"c58fk","./internal/config":"fX0gC","./internal/operators/audit":false,"./internal/operators/auditTime":false,"./internal/operators/buffer":false,"./internal/operators/bufferCount":false,"./internal/operators/bufferTime":false,"./internal/operators/bufferToggle":false,"./internal/operators/bufferWhen":false,"./internal/operators/catchError":false,"./internal/operators/combineAll":false,"./internal/operators/combineLatestAll":false,"./internal/operators/combineLatestWith":false,"./internal/operators/concatAll":false,"./internal/operators/concatMap":false,"./internal/operators/concatMapTo":false,"./internal/operators/concatWith":false,"./internal/operators/connect":false,"./internal/operators/count":false,"./internal/operators/debounce":false,"./internal/operators/debounceTime":false,"./internal/operators/defaultIfEmpty":false,"./internal/operators/delay":false,"./internal/operators/delayWhen":false,"./internal/operators/dematerialize":false,"./internal/operators/distinct":false,"./internal/operators/distinctUntilChanged":false,"./internal/operators/distinctUntilKeyChanged":false,"./internal/operators/elementAt":false,"./internal/operators/endWith":false,"./internal/operators/every":false,"./internal/operators/exhaust":false,"./internal/operators/exhaustAll":false,"./internal/operators/exhaustMap":false,"./internal/operators/expand":false,"./internal/operators/filter":false,"./internal/operators/finalize":false,"./internal/operators/find":false,"./internal/operators/findIndex":false,"./internal/operators/first":false,"./internal/operators/groupBy":false,"./internal/operators/ignoreElements":false,"./internal/operators/isEmpty":false,"./internal/operators/last":false,"./internal/operators/map":"25iUP","./internal/operators/mapTo":false,"./internal/operators/materialize":false,"./internal/operators/max":false,"./internal/operators/mergeAll":false,"./internal/operators/flatMap":false,"./internal/operators/mergeMap":"1Kzmb","./internal/operators/mergeMapTo":false,"./internal/operators/mergeScan":false,"./internal/operators/mergeWith":false,"./internal/operators/min":false,"./internal/operators/multicast":false,"./internal/operators/observeOn":"21OcU","./internal/operators/onErrorResumeNextWith":false,"./internal/operators/pairwise":false,"./internal/operators/pluck":false,"./internal/operators/publish":false,"./internal/operators/publishBehavior":false,"./internal/operators/publishLast":false,"./internal/operators/publishReplay":false,"./internal/operators/raceWith":false,"./internal/operators/reduce":false,"./internal/operators/repeat":false,"./internal/operators/repeatWhen":false,"./internal/operators/retry":false,"./internal/operators/retryWhen":false,"./internal/operators/refCount":false,"./internal/operators/sample":false,"./internal/operators/sampleTime":false,"./internal/operators/scan":false,"./internal/operators/sequenceEqual":false,"./internal/operators/share":false,"./internal/operators/shareReplay":false,"./internal/operators/single":false,"./internal/operators/skip":false,"./internal/operators/skipLast":false,"./internal/operators/skipUntil":false,"./internal/operators/skipWhile":false,"./internal/operators/startWith":false,"./internal/operators/subscribeOn":"3SFol","./internal/operators/switchAll":false,"./internal/operators/switchMap":false,"./internal/operators/switchMapTo":false,"./internal/operators/switchScan":false,"./internal/operators/take":false,"./internal/operators/takeLast":false,"./internal/operators/takeUntil":false,"./internal/operators/takeWhile":false,"./internal/operators/tap":false,"./internal/operators/throttle":false,"./internal/operators/throttleTime":false,"./internal/operators/throwIfEmpty":false,"./internal/operators/timeInterval":false,"./internal/operators/timeoutWith":false,"./internal/operators/timestamp":false,"./internal/operators/toArray":false,"./internal/operators/window":false,"./internal/operators/windowCount":false,"./internal/operators/windowTime":false,"./internal/operators/windowToggle":false,"./internal/operators/windowWhen":false,"./internal/operators/withLatestFrom":false,"./internal/operators/zipAll":false,"./internal/operators/zipWith":false,"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Jvxr":[function(require,module,exports) {
+},{"./internal/Observable":"4Jvxr","./internal/observable/ConnectableObservable":false,"./internal/symbol/observable":"byHtV","./internal/observable/dom/animationFrames":false,"./internal/Subject":false,"./internal/BehaviorSubject":false,"./internal/ReplaySubject":false,"./internal/AsyncSubject":false,"./internal/scheduler/asap":false,"./internal/scheduler/async":"bKyC1","./internal/scheduler/queue":false,"./internal/scheduler/animationFrame":false,"./internal/scheduler/VirtualTimeScheduler":false,"./internal/Scheduler":"90yvc","./internal/Subscription":"lFyhg","./internal/Subscriber":"1VFFQ","./internal/Notification":false,"./internal/util/pipe":"1GN6U","./internal/util/noop":"l8uEm","./internal/util/identity":"8Xfg6","./internal/util/isObservable":false,"./internal/lastValueFrom":false,"./internal/firstValueFrom":false,"./internal/util/ArgumentOutOfRangeError":false,"./internal/util/EmptyError":"6OnNQ","./internal/util/NotFoundError":false,"./internal/util/ObjectUnsubscribedError":false,"./internal/util/SequenceError":false,"./internal/operators/timeout":false,"./internal/util/UnsubscriptionError":"GSF7Z","./internal/observable/bindCallback":false,"./internal/observable/bindNodeCallback":false,"./internal/observable/combineLatest":false,"./internal/observable/concat":false,"./internal/observable/connectable":false,"./internal/observable/defer":false,"./internal/observable/empty":"dGHVG","./internal/observable/forkJoin":false,"./internal/observable/from":"dBWag","./internal/observable/fromEvent":"eTJLc","./internal/observable/fromEventPattern":false,"./internal/observable/generate":false,"./internal/observable/iif":false,"./internal/observable/interval":"5Ox1i","./internal/observable/merge":false,"./internal/observable/never":false,"./internal/observable/of":"lnQPU","./internal/observable/onErrorResumeNext":false,"./internal/observable/pairs":false,"./internal/observable/partition":false,"./internal/observable/race":false,"./internal/observable/range":"b4lqr","./internal/observable/throwError":false,"./internal/observable/timer":"lbPdw","./internal/observable/using":false,"./internal/observable/zip":false,"./internal/scheduled/scheduled":"l8eo2","./internal/types":"c58fk","./internal/config":"fX0gC","./internal/operators/audit":false,"./internal/operators/auditTime":false,"./internal/operators/buffer":false,"./internal/operators/bufferCount":false,"./internal/operators/bufferTime":false,"./internal/operators/bufferToggle":false,"./internal/operators/bufferWhen":false,"./internal/operators/catchError":false,"./internal/operators/combineAll":false,"./internal/operators/combineLatestAll":false,"./internal/operators/combineLatestWith":false,"./internal/operators/concatAll":false,"./internal/operators/concatMap":false,"./internal/operators/concatMapTo":false,"./internal/operators/concatWith":false,"./internal/operators/connect":false,"./internal/operators/count":false,"./internal/operators/debounce":false,"./internal/operators/debounceTime":false,"./internal/operators/defaultIfEmpty":"03Bwx","./internal/operators/delay":false,"./internal/operators/delayWhen":false,"./internal/operators/dematerialize":false,"./internal/operators/distinct":false,"./internal/operators/distinctUntilChanged":"knFKV","./internal/operators/distinctUntilKeyChanged":"6inhx","./internal/operators/elementAt":false,"./internal/operators/endWith":false,"./internal/operators/every":false,"./internal/operators/exhaust":false,"./internal/operators/exhaustAll":false,"./internal/operators/exhaustMap":false,"./internal/operators/expand":false,"./internal/operators/filter":"gA0i5","./internal/operators/finalize":false,"./internal/operators/find":false,"./internal/operators/findIndex":false,"./internal/operators/first":"1Jl7y","./internal/operators/groupBy":false,"./internal/operators/ignoreElements":false,"./internal/operators/isEmpty":false,"./internal/operators/last":false,"./internal/operators/map":"25iUP","./internal/operators/mapTo":"8NiL4","./internal/operators/materialize":false,"./internal/operators/max":false,"./internal/operators/mergeAll":false,"./internal/operators/flatMap":false,"./internal/operators/mergeMap":"1Kzmb","./internal/operators/mergeMapTo":false,"./internal/operators/mergeScan":false,"./internal/operators/mergeWith":false,"./internal/operators/min":false,"./internal/operators/multicast":false,"./internal/operators/observeOn":"21OcU","./internal/operators/onErrorResumeNextWith":false,"./internal/operators/pairwise":false,"./internal/operators/pluck":"167Lv","./internal/operators/publish":false,"./internal/operators/publishBehavior":false,"./internal/operators/publishLast":false,"./internal/operators/publishReplay":false,"./internal/operators/raceWith":false,"./internal/operators/reduce":"8K6iO","./internal/operators/repeat":false,"./internal/operators/repeatWhen":false,"./internal/operators/retry":false,"./internal/operators/retryWhen":false,"./internal/operators/refCount":false,"./internal/operators/sample":false,"./internal/operators/sampleTime":false,"./internal/operators/scan":"efPFC","./internal/operators/sequenceEqual":false,"./internal/operators/share":false,"./internal/operators/shareReplay":false,"./internal/operators/single":false,"./internal/operators/skip":false,"./internal/operators/skipLast":false,"./internal/operators/skipUntil":false,"./internal/operators/skipWhile":false,"./internal/operators/startWith":false,"./internal/operators/subscribeOn":"3SFol","./internal/operators/switchAll":false,"./internal/operators/switchMap":false,"./internal/operators/switchMapTo":false,"./internal/operators/switchScan":false,"./internal/operators/take":"jxxom","./internal/operators/takeLast":false,"./internal/operators/takeUntil":"aAb4W","./internal/operators/takeWhile":"feQNd","./internal/operators/tap":"dVdZH","./internal/operators/throttle":false,"./internal/operators/throttleTime":false,"./internal/operators/throwIfEmpty":"1CMQN","./internal/operators/timeInterval":false,"./internal/operators/timeoutWith":false,"./internal/operators/timestamp":false,"./internal/operators/toArray":false,"./internal/operators/window":false,"./internal/operators/windowCount":false,"./internal/operators/windowTime":false,"./internal/operators/windowToggle":false,"./internal/operators/windowWhen":false,"./internal/operators/withLatestFrom":false,"./internal/operators/zipAll":false,"./internal/operators/zipWith":false,"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Jvxr":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Observable", ()=>Observable);
@@ -2144,7 +2383,20 @@ var dateTimestampProvider = {
     delegate: undefined
 };
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dGHVG":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6OnNQ":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "EmptyError", ()=>EmptyError);
+var _createErrorClass = require("./createErrorClass");
+var EmptyError = (0, _createErrorClass.createErrorClass)(function(_super) {
+    return function EmptyErrorImpl() {
+        _super(this);
+        this.name = "EmptyError";
+        this.message = "no elements in sequence";
+    };
+});
+
+},{"./createErrorClass":"i1v8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dGHVG":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "EMPTY", ()=>EMPTY);
@@ -3072,6 +3324,291 @@ function range(start, count, scheduler) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["j8jph","jL2mp"], "jL2mp", "parcelRequirea2a8")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"03Bwx":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "defaultIfEmpty", ()=>defaultIfEmpty);
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function defaultIfEmpty(defaultValue) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        var hasValue = false;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            hasValue = true;
+            subscriber.next(value);
+        }, function() {
+            if (!hasValue) subscriber.next(defaultValue);
+            subscriber.complete();
+        }));
+    });
+}
+
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"knFKV":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "distinctUntilChanged", ()=>distinctUntilChanged);
+var _identity = require("../util/identity");
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function distinctUntilChanged(comparator, keySelector) {
+    if (keySelector === void 0) keySelector = (0, _identity.identity);
+    comparator = comparator !== null && comparator !== void 0 ? comparator : defaultCompare;
+    return (0, _lift.operate)(function(source, subscriber) {
+        var previousKey;
+        var first = true;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            var currentKey = keySelector(value);
+            if (first || !comparator(previousKey, currentKey)) {
+                first = false;
+                previousKey = currentKey;
+                subscriber.next(value);
+            }
+        }));
+    });
+}
+function defaultCompare(a, b) {
+    return a === b;
+}
+
+},{"../util/identity":"8Xfg6","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6inhx":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "distinctUntilKeyChanged", ()=>distinctUntilKeyChanged);
+var _distinctUntilChanged = require("./distinctUntilChanged");
+function distinctUntilKeyChanged(key, compare) {
+    return (0, _distinctUntilChanged.distinctUntilChanged)(function(x, y) {
+        return compare ? compare(x[key], y[key]) : x[key] === y[key];
+    });
+}
+
+},{"./distinctUntilChanged":"knFKV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gA0i5":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "filter", ()=>filter);
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function filter(predicate, thisArg) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        var index = 0;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            return predicate.call(thisArg, value, index++) && subscriber.next(value);
+        }));
+    });
+}
+
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1Jl7y":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "first", ()=>first);
+var _emptyError = require("../util/EmptyError");
+var _filter = require("./filter");
+var _take = require("./take");
+var _defaultIfEmpty = require("./defaultIfEmpty");
+var _throwIfEmpty = require("./throwIfEmpty");
+var _identity = require("../util/identity");
+function first(predicate, defaultValue) {
+    var hasDefaultValue = arguments.length >= 2;
+    return function(source) {
+        return source.pipe(predicate ? (0, _filter.filter)(function(v, i) {
+            return predicate(v, i, source);
+        }) : (0, _identity.identity), (0, _take.take)(1), hasDefaultValue ? (0, _defaultIfEmpty.defaultIfEmpty)(defaultValue) : (0, _throwIfEmpty.throwIfEmpty)(function() {
+            return new (0, _emptyError.EmptyError)();
+        }));
+    };
+}
+
+},{"../util/EmptyError":"6OnNQ","./filter":"gA0i5","./take":"jxxom","./defaultIfEmpty":"03Bwx","./throwIfEmpty":"1CMQN","../util/identity":"8Xfg6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jxxom":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "take", ()=>take);
+var _empty = require("../observable/empty");
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function take(count) {
+    return count <= 0 ? function() {
+        return 0, _empty.EMPTY;
+    } : (0, _lift.operate)(function(source, subscriber) {
+        var seen = 0;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            if (++seen <= count) {
+                subscriber.next(value);
+                if (count <= seen) subscriber.complete();
+            }
+        }));
+    });
+}
+
+},{"../observable/empty":"dGHVG","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1CMQN":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "throwIfEmpty", ()=>throwIfEmpty);
+var _emptyError = require("../util/EmptyError");
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function throwIfEmpty(errorFactory) {
+    if (errorFactory === void 0) errorFactory = defaultErrorFactory;
+    return (0, _lift.operate)(function(source, subscriber) {
+        var hasValue = false;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            hasValue = true;
+            subscriber.next(value);
+        }, function() {
+            return hasValue ? subscriber.complete() : subscriber.error(errorFactory());
+        }));
+    });
+}
+function defaultErrorFactory() {
+    return new (0, _emptyError.EmptyError)();
+}
+
+},{"../util/EmptyError":"6OnNQ","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8NiL4":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "mapTo", ()=>mapTo);
+var _map = require("./map");
+function mapTo(value) {
+    return (0, _map.map)(function() {
+        return value;
+    });
+}
+
+},{"./map":"25iUP","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"167Lv":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "pluck", ()=>pluck);
+var _map = require("./map");
+function pluck() {
+    var properties = [];
+    for(var _i = 0; _i < arguments.length; _i++)properties[_i] = arguments[_i];
+    var length = properties.length;
+    if (length === 0) throw new Error("list of properties cannot be empty.");
+    return (0, _map.map)(function(x) {
+        var currentProp = x;
+        for(var i = 0; i < length; i++){
+            var p = currentProp === null || currentProp === void 0 ? void 0 : currentProp[properties[i]];
+            if (typeof p !== "undefined") currentProp = p;
+            else return undefined;
+        }
+        return currentProp;
+    });
+}
+
+},{"./map":"25iUP","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8K6iO":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "reduce", ()=>reduce);
+var _scanInternals = require("./scanInternals");
+var _lift = require("../util/lift");
+function reduce(accumulator, seed) {
+    return (0, _lift.operate)((0, _scanInternals.scanInternals)(accumulator, seed, arguments.length >= 2, false, true));
+}
+
+},{"./scanInternals":"7fn6o","../util/lift":"7CiSs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7fn6o":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "scanInternals", ()=>scanInternals);
+var _operatorSubscriber = require("./OperatorSubscriber");
+function scanInternals(accumulator, seed, hasSeed, emitOnNext, emitBeforeComplete) {
+    return function(source, subscriber) {
+        var hasState = hasSeed;
+        var state = seed;
+        var index = 0;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            var i = index++;
+            state = hasState ? accumulator(state, value, i) : (hasState = true, value);
+            emitOnNext && subscriber.next(state);
+        }, emitBeforeComplete && function() {
+            hasState && subscriber.next(state);
+            subscriber.complete();
+        }));
+    };
+}
+
+},{"./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"efPFC":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "scan", ()=>scan);
+var _lift = require("../util/lift");
+var _scanInternals = require("./scanInternals");
+function scan(accumulator, seed) {
+    return (0, _lift.operate)((0, _scanInternals.scanInternals)(accumulator, seed, arguments.length >= 2, true));
+}
+
+},{"../util/lift":"7CiSs","./scanInternals":"7fn6o","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aAb4W":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "takeUntil", ()=>takeUntil);
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+var _innerFrom = require("../observable/innerFrom");
+var _noop = require("../util/noop");
+function takeUntil(notifier) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        (0, _innerFrom.innerFrom)(notifier).subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function() {
+            return subscriber.complete();
+        }, (0, _noop.noop)));
+        !subscriber.closed && source.subscribe(subscriber);
+    });
+}
+
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","../observable/innerFrom":"27e4p","../util/noop":"l8uEm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"feQNd":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "takeWhile", ()=>takeWhile);
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function takeWhile(predicate, inclusive) {
+    if (inclusive === void 0) inclusive = false;
+    return (0, _lift.operate)(function(source, subscriber) {
+        var index = 0;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            var result = predicate(value, index++);
+            (result || inclusive) && subscriber.next(value);
+            !result && subscriber.complete();
+        }));
+    });
+}
+
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dVdZH":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "tap", ()=>tap);
+var _isFunction = require("../util/isFunction");
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+var _identity = require("../util/identity");
+function tap(observerOrNext, error, complete) {
+    var tapObserver = (0, _isFunction.isFunction)(observerOrNext) || error || complete ? {
+        next: observerOrNext,
+        error: error,
+        complete: complete
+    } : observerOrNext;
+    return tapObserver ? (0, _lift.operate)(function(source, subscriber) {
+        var _a;
+        (_a = tapObserver.subscribe) === null || _a === void 0 || _a.call(tapObserver);
+        var isUnsub = true;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            var _a;
+            (_a = tapObserver.next) === null || _a === void 0 || _a.call(tapObserver, value);
+            subscriber.next(value);
+        }, function() {
+            var _a;
+            isUnsub = false;
+            (_a = tapObserver.complete) === null || _a === void 0 || _a.call(tapObserver);
+            subscriber.complete();
+        }, function(err) {
+            var _a;
+            isUnsub = false;
+            (_a = tapObserver.error) === null || _a === void 0 || _a.call(tapObserver, err);
+            subscriber.error(err);
+        }, function() {
+            var _a, _b;
+            if (isUnsub) (_a = tapObserver.unsubscribe) === null || _a === void 0 || _a.call(tapObserver);
+            (_b = tapObserver.finalize) === null || _b === void 0 || _b.call(tapObserver);
+        }));
+    }) : (0, _identity.identity);
+}
+
+},{"../util/isFunction":"dEyyK","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","../util/identity":"8Xfg6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["j8jph","jL2mp"], "jL2mp", "parcelRequirea2a8")
 
 //# sourceMappingURL=index.22dc3ac3.js.map
