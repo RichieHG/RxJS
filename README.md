@@ -73,3 +73,15 @@ Some operators are:
 
 ***First***
 first operator is a combined between filter and take(1)
+
+### Rate Limiting Operators
+Time based filtering operators:
+- Emitting latest value after a pause
+- Sampling stream on certain duration
+- Other time-based conditions
+
+Some operators are:
+* debounceTime
+* throttleTime
+* sampleTime
+* auditTime

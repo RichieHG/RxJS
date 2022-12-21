@@ -534,20 +534,19 @@ function hmrAcceptRun(bundle, id) {
 },{}],"jL2mp":[function(require,module,exports) {
 // @ts-nocheck
 var _rxjs = require("rxjs");
-// function hello(){
-//     return 'Hello World!'
+// function* hello() {
+//     // return 'Hello World!'
+//     yield 'Hello',
+//     yield 'World'
 // }
-function* hello() {
-    yield "Hello", yield "World";
-}
-const iterator = hello();
+// const observer = {
+//     next: value => console.log('next', value),
+//     error: error => console.log('error', error),
+//     complete: () => console.log('complete!')
+// }
+// const iterator = hello();
 // console.log(iterator.next().value);
 // console.log(iterator.next().value);
-const observer = {
-    next: (value)=>console.log("next", value),
-    error: (error)=>console.log("error", error),
-    complete: ()=>console.log("complete!")
-};
 // const observable = new Observable(subcriber => {
 //     subcriber.next('Hello');
 //     subcriber.next('World');
@@ -796,35 +795,87 @@ const observer = {
 // numbers$.pipe(
 //     distinctUntilChanged()
 // ).subscribe(console.log)
-const user = [
-    {
-        name: "Brian",
-        loggedIn: false,
-        token: null
-    },
-    // { name: 'Louis', loggedIn: true, token: '123' },
-    {
-        name: "Brian",
-        loggedIn: false,
-        token: null
-    },
-    {
-        name: "Brian",
-        loggedIn: true,
-        token: "abc"
-    }
-];
-const state$ = (0, _rxjs.from)(user).pipe((0, _rxjs.scan)((accumulator, currentValue)=>{
-    return {
-        ...accumulator,
-        ...currentValue
-    };
-}, {}));
-const name$ = state$.pipe(// distinctUntilChanged((previousValue, currentValue) => {
-//     return previousValue.name === currentValue.name
-// }),
-(0, _rxjs.distinctUntilKeyChanged)("name"), (0, _rxjs.map)((state)=>state.name));
-name$.subscribe(console.log) //#endregion
+// const user = [
+//     { name: 'Brian', loggedIn: false, token: null },
+//     // { name: 'Louis', loggedIn: true, token: '123' },
+//     { name: 'Brian', loggedIn: false, token: null },
+//     { name: 'Brian', loggedIn: true, token: 'abc' }
+// ]
+// const state$ = from(user).pipe(
+//     scan((accumulator, currentValue) => {
+//         return { ...accumulator, ...currentValue }
+//     }, {})
+// );
+// const name$ = state$.pipe(
+//     // distinctUntilChanged((previousValue, currentValue) => {
+//     //     return previousValue.name === currentValue.name
+//     // }),
+//     distinctUntilKeyChanged('name'), //equals to the above function
+//     map(state => state.name)
+// );
+// name$.subscribe(console.log)
+//#endregion
+//#region DebounceTime
+// const click$ = fromEvent(document, 'click');
+// click$.pipe(
+//     debounceTime(1000)
+// ).subscribe(console.log)
+// const inputBox = document.querySelector('#text-input');
+// const input$ = fromEvent(inputBox, 'keyup');
+// input$.pipe(
+//     // debounceTime(1000),
+//     debounce(() =>  interval(1000)), // equals to => debounceTime(1000)
+//     map( event => event.target.value),
+//     distinctUntilChanged()
+// ).subscribe(console.log)
+//#endregion
+//#region ThrottleTime
+// const click$ = fromEvent(document, 'click');
+// click$.pipe(
+//     throttleTime(3000)
+// ).subscribe(console.log)
+// function calculateScrollPercent(element) {
+//     const {
+//         scrollTop,
+//         scrollHeight,
+//         clientHeight
+//     } = element;
+//     return (scrollTop/ (scrollHeight - clientHeight)) *100;
+// }
+// const progressBar = document.querySelector('.progress-bar');
+// const scroll$ =  fromEvent(document,'scroll');
+// const progress$ = scroll$.pipe(
+//     throttleTime(30, asyncScheduler, {
+//         leading: false,
+//         trailing: true
+//     }),
+//     map(({target}) => calculateScrollPercent(target.documentElement)),
+//     tap(console.log)
+// )
+// progress$.subscribe(perecent => {
+//     progressBar.style.width = `${perecent}%`
+// });
+//#endegion
+//#region SampleTime
+// const click$ = fromEvent(document, 'click');
+// const timer$ = interval(1000);
+// // click$.pipe(
+// //     sampleTime(4000),
+// //     map(({clientX, clientY}) => ({
+// //         clientX, clientY
+// //     }))
+// // ).subscribe(console.log)
+// timer$.pipe(
+//     sample(click$)
+// ).subscribe(console.log)
+//#endregion
+//#region AuditTime
+const click$ = (0, _rxjs.fromEvent)(document, "click");
+const timer$ = (0, _rxjs.interval)(1000);
+click$.pipe((0, _rxjs.auditTime)(4000), (0, _rxjs.map)(({ clientX , clientY  })=>({
+        clientX,
+        clientY
+    }))).subscribe(console.log) //#endregion
 ;
 
 },{"rxjs":"lLy7s"}],"lLy7s":[function(require,module,exports) {
@@ -1170,7 +1221,7 @@ var _withLatestFrom = require("./internal/operators/withLatestFrom");
 var _zipAll = require("./internal/operators/zipAll");
 var _zipWith = require("./internal/operators/zipWith");
 
-},{"./internal/Observable":"4Jvxr","./internal/observable/ConnectableObservable":false,"./internal/symbol/observable":"byHtV","./internal/observable/dom/animationFrames":false,"./internal/Subject":false,"./internal/BehaviorSubject":false,"./internal/ReplaySubject":false,"./internal/AsyncSubject":false,"./internal/scheduler/asap":false,"./internal/scheduler/async":"bKyC1","./internal/scheduler/queue":false,"./internal/scheduler/animationFrame":false,"./internal/scheduler/VirtualTimeScheduler":false,"./internal/Scheduler":"90yvc","./internal/Subscription":"lFyhg","./internal/Subscriber":"1VFFQ","./internal/Notification":false,"./internal/util/pipe":"1GN6U","./internal/util/noop":"l8uEm","./internal/util/identity":"8Xfg6","./internal/util/isObservable":false,"./internal/lastValueFrom":false,"./internal/firstValueFrom":false,"./internal/util/ArgumentOutOfRangeError":false,"./internal/util/EmptyError":"6OnNQ","./internal/util/NotFoundError":false,"./internal/util/ObjectUnsubscribedError":false,"./internal/util/SequenceError":false,"./internal/operators/timeout":false,"./internal/util/UnsubscriptionError":"GSF7Z","./internal/observable/bindCallback":false,"./internal/observable/bindNodeCallback":false,"./internal/observable/combineLatest":false,"./internal/observable/concat":false,"./internal/observable/connectable":false,"./internal/observable/defer":false,"./internal/observable/empty":"dGHVG","./internal/observable/forkJoin":false,"./internal/observable/from":"dBWag","./internal/observable/fromEvent":"eTJLc","./internal/observable/fromEventPattern":false,"./internal/observable/generate":false,"./internal/observable/iif":false,"./internal/observable/interval":"5Ox1i","./internal/observable/merge":false,"./internal/observable/never":false,"./internal/observable/of":"lnQPU","./internal/observable/onErrorResumeNext":false,"./internal/observable/pairs":false,"./internal/observable/partition":false,"./internal/observable/race":false,"./internal/observable/range":"b4lqr","./internal/observable/throwError":false,"./internal/observable/timer":"lbPdw","./internal/observable/using":false,"./internal/observable/zip":false,"./internal/scheduled/scheduled":"l8eo2","./internal/types":"c58fk","./internal/config":"fX0gC","./internal/operators/audit":false,"./internal/operators/auditTime":false,"./internal/operators/buffer":false,"./internal/operators/bufferCount":false,"./internal/operators/bufferTime":false,"./internal/operators/bufferToggle":false,"./internal/operators/bufferWhen":false,"./internal/operators/catchError":false,"./internal/operators/combineAll":false,"./internal/operators/combineLatestAll":false,"./internal/operators/combineLatestWith":false,"./internal/operators/concatAll":false,"./internal/operators/concatMap":false,"./internal/operators/concatMapTo":false,"./internal/operators/concatWith":false,"./internal/operators/connect":false,"./internal/operators/count":false,"./internal/operators/debounce":false,"./internal/operators/debounceTime":false,"./internal/operators/defaultIfEmpty":"03Bwx","./internal/operators/delay":false,"./internal/operators/delayWhen":false,"./internal/operators/dematerialize":false,"./internal/operators/distinct":false,"./internal/operators/distinctUntilChanged":"knFKV","./internal/operators/distinctUntilKeyChanged":"6inhx","./internal/operators/elementAt":false,"./internal/operators/endWith":false,"./internal/operators/every":false,"./internal/operators/exhaust":false,"./internal/operators/exhaustAll":false,"./internal/operators/exhaustMap":false,"./internal/operators/expand":false,"./internal/operators/filter":"gA0i5","./internal/operators/finalize":false,"./internal/operators/find":false,"./internal/operators/findIndex":false,"./internal/operators/first":"1Jl7y","./internal/operators/groupBy":false,"./internal/operators/ignoreElements":false,"./internal/operators/isEmpty":false,"./internal/operators/last":false,"./internal/operators/map":"25iUP","./internal/operators/mapTo":"8NiL4","./internal/operators/materialize":false,"./internal/operators/max":false,"./internal/operators/mergeAll":false,"./internal/operators/flatMap":false,"./internal/operators/mergeMap":"1Kzmb","./internal/operators/mergeMapTo":false,"./internal/operators/mergeScan":false,"./internal/operators/mergeWith":false,"./internal/operators/min":false,"./internal/operators/multicast":false,"./internal/operators/observeOn":"21OcU","./internal/operators/onErrorResumeNextWith":false,"./internal/operators/pairwise":false,"./internal/operators/pluck":"167Lv","./internal/operators/publish":false,"./internal/operators/publishBehavior":false,"./internal/operators/publishLast":false,"./internal/operators/publishReplay":false,"./internal/operators/raceWith":false,"./internal/operators/reduce":"8K6iO","./internal/operators/repeat":false,"./internal/operators/repeatWhen":false,"./internal/operators/retry":false,"./internal/operators/retryWhen":false,"./internal/operators/refCount":false,"./internal/operators/sample":false,"./internal/operators/sampleTime":false,"./internal/operators/scan":"efPFC","./internal/operators/sequenceEqual":false,"./internal/operators/share":false,"./internal/operators/shareReplay":false,"./internal/operators/single":false,"./internal/operators/skip":false,"./internal/operators/skipLast":false,"./internal/operators/skipUntil":false,"./internal/operators/skipWhile":false,"./internal/operators/startWith":false,"./internal/operators/subscribeOn":"3SFol","./internal/operators/switchAll":false,"./internal/operators/switchMap":false,"./internal/operators/switchMapTo":false,"./internal/operators/switchScan":false,"./internal/operators/take":"jxxom","./internal/operators/takeLast":false,"./internal/operators/takeUntil":"aAb4W","./internal/operators/takeWhile":"feQNd","./internal/operators/tap":"dVdZH","./internal/operators/throttle":false,"./internal/operators/throttleTime":false,"./internal/operators/throwIfEmpty":"1CMQN","./internal/operators/timeInterval":false,"./internal/operators/timeoutWith":false,"./internal/operators/timestamp":false,"./internal/operators/toArray":false,"./internal/operators/window":false,"./internal/operators/windowCount":false,"./internal/operators/windowTime":false,"./internal/operators/windowToggle":false,"./internal/operators/windowWhen":false,"./internal/operators/withLatestFrom":false,"./internal/operators/zipAll":false,"./internal/operators/zipWith":false,"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Jvxr":[function(require,module,exports) {
+},{"./internal/Observable":"4Jvxr","./internal/observable/ConnectableObservable":false,"./internal/symbol/observable":"byHtV","./internal/observable/dom/animationFrames":false,"./internal/Subject":false,"./internal/BehaviorSubject":false,"./internal/ReplaySubject":false,"./internal/AsyncSubject":false,"./internal/scheduler/asap":false,"./internal/scheduler/async":"bKyC1","./internal/scheduler/queue":false,"./internal/scheduler/animationFrame":false,"./internal/scheduler/VirtualTimeScheduler":false,"./internal/Scheduler":"90yvc","./internal/Subscription":"lFyhg","./internal/Subscriber":"1VFFQ","./internal/Notification":false,"./internal/util/pipe":"1GN6U","./internal/util/noop":"l8uEm","./internal/util/identity":"8Xfg6","./internal/util/isObservable":false,"./internal/lastValueFrom":false,"./internal/firstValueFrom":false,"./internal/util/ArgumentOutOfRangeError":false,"./internal/util/EmptyError":"6OnNQ","./internal/util/NotFoundError":false,"./internal/util/ObjectUnsubscribedError":false,"./internal/util/SequenceError":false,"./internal/operators/timeout":false,"./internal/util/UnsubscriptionError":"GSF7Z","./internal/observable/bindCallback":false,"./internal/observable/bindNodeCallback":false,"./internal/observable/combineLatest":false,"./internal/observable/concat":false,"./internal/observable/connectable":false,"./internal/observable/defer":false,"./internal/observable/empty":"dGHVG","./internal/observable/forkJoin":false,"./internal/observable/from":"dBWag","./internal/observable/fromEvent":"eTJLc","./internal/observable/fromEventPattern":false,"./internal/observable/generate":false,"./internal/observable/iif":false,"./internal/observable/interval":"5Ox1i","./internal/observable/merge":false,"./internal/observable/never":false,"./internal/observable/of":"lnQPU","./internal/observable/onErrorResumeNext":false,"./internal/observable/pairs":false,"./internal/observable/partition":false,"./internal/observable/race":false,"./internal/observable/range":"b4lqr","./internal/observable/throwError":false,"./internal/observable/timer":"lbPdw","./internal/observable/using":false,"./internal/observable/zip":false,"./internal/scheduled/scheduled":"l8eo2","./internal/types":"c58fk","./internal/config":"fX0gC","./internal/operators/audit":"bjPYH","./internal/operators/auditTime":"e71yK","./internal/operators/buffer":false,"./internal/operators/bufferCount":false,"./internal/operators/bufferTime":false,"./internal/operators/bufferToggle":false,"./internal/operators/bufferWhen":false,"./internal/operators/catchError":false,"./internal/operators/combineAll":false,"./internal/operators/combineLatestAll":false,"./internal/operators/combineLatestWith":false,"./internal/operators/concatAll":false,"./internal/operators/concatMap":false,"./internal/operators/concatMapTo":false,"./internal/operators/concatWith":false,"./internal/operators/connect":false,"./internal/operators/count":false,"./internal/operators/debounce":"7rG7K","./internal/operators/debounceTime":"kQLcN","./internal/operators/defaultIfEmpty":"03Bwx","./internal/operators/delay":false,"./internal/operators/delayWhen":false,"./internal/operators/dematerialize":false,"./internal/operators/distinct":false,"./internal/operators/distinctUntilChanged":"knFKV","./internal/operators/distinctUntilKeyChanged":"6inhx","./internal/operators/elementAt":false,"./internal/operators/endWith":false,"./internal/operators/every":false,"./internal/operators/exhaust":false,"./internal/operators/exhaustAll":false,"./internal/operators/exhaustMap":false,"./internal/operators/expand":false,"./internal/operators/filter":"gA0i5","./internal/operators/finalize":false,"./internal/operators/find":false,"./internal/operators/findIndex":false,"./internal/operators/first":"1Jl7y","./internal/operators/groupBy":false,"./internal/operators/ignoreElements":false,"./internal/operators/isEmpty":false,"./internal/operators/last":false,"./internal/operators/map":"25iUP","./internal/operators/mapTo":"8NiL4","./internal/operators/materialize":false,"./internal/operators/max":false,"./internal/operators/mergeAll":false,"./internal/operators/flatMap":false,"./internal/operators/mergeMap":"1Kzmb","./internal/operators/mergeMapTo":false,"./internal/operators/mergeScan":false,"./internal/operators/mergeWith":false,"./internal/operators/min":false,"./internal/operators/multicast":false,"./internal/operators/observeOn":"21OcU","./internal/operators/onErrorResumeNextWith":false,"./internal/operators/pairwise":false,"./internal/operators/pluck":"167Lv","./internal/operators/publish":false,"./internal/operators/publishBehavior":false,"./internal/operators/publishLast":false,"./internal/operators/publishReplay":false,"./internal/operators/raceWith":false,"./internal/operators/reduce":"8K6iO","./internal/operators/repeat":false,"./internal/operators/repeatWhen":false,"./internal/operators/retry":false,"./internal/operators/retryWhen":false,"./internal/operators/refCount":false,"./internal/operators/sample":"8BFGG","./internal/operators/sampleTime":"1OyWk","./internal/operators/scan":"efPFC","./internal/operators/sequenceEqual":false,"./internal/operators/share":false,"./internal/operators/shareReplay":false,"./internal/operators/single":false,"./internal/operators/skip":false,"./internal/operators/skipLast":false,"./internal/operators/skipUntil":false,"./internal/operators/skipWhile":false,"./internal/operators/startWith":false,"./internal/operators/subscribeOn":"3SFol","./internal/operators/switchAll":false,"./internal/operators/switchMap":false,"./internal/operators/switchMapTo":false,"./internal/operators/switchScan":false,"./internal/operators/take":"jxxom","./internal/operators/takeLast":false,"./internal/operators/takeUntil":"aAb4W","./internal/operators/takeWhile":"feQNd","./internal/operators/tap":"dVdZH","./internal/operators/throttle":"16qvo","./internal/operators/throttleTime":"5oUZ3","./internal/operators/throwIfEmpty":"1CMQN","./internal/operators/timeInterval":false,"./internal/operators/timeoutWith":false,"./internal/operators/timestamp":false,"./internal/operators/toArray":false,"./internal/operators/window":false,"./internal/operators/windowCount":false,"./internal/operators/windowTime":false,"./internal/operators/windowToggle":false,"./internal/operators/windowWhen":false,"./internal/operators/withLatestFrom":false,"./internal/operators/zipAll":false,"./internal/operators/zipWith":false,"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Jvxr":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Observable", ()=>Observable);
@@ -3324,7 +3375,146 @@ function range(start, count, scheduler) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"03Bwx":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bjPYH":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "audit", ()=>audit);
+var _lift = require("../util/lift");
+var _innerFrom = require("../observable/innerFrom");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function audit(durationSelector) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        var hasValue = false;
+        var lastValue = null;
+        var durationSubscriber = null;
+        var isComplete = false;
+        var endDuration = function() {
+            durationSubscriber === null || durationSubscriber === void 0 || durationSubscriber.unsubscribe();
+            durationSubscriber = null;
+            if (hasValue) {
+                hasValue = false;
+                var value = lastValue;
+                lastValue = null;
+                subscriber.next(value);
+            }
+            isComplete && subscriber.complete();
+        };
+        var cleanupDuration = function() {
+            durationSubscriber = null;
+            isComplete && subscriber.complete();
+        };
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            hasValue = true;
+            lastValue = value;
+            if (!durationSubscriber) (0, _innerFrom.innerFrom)(durationSelector(value)).subscribe(durationSubscriber = (0, _operatorSubscriber.createOperatorSubscriber)(subscriber, endDuration, cleanupDuration));
+        }, function() {
+            isComplete = true;
+            (!hasValue || !durationSubscriber || durationSubscriber.closed) && subscriber.complete();
+        }));
+    });
+}
+
+},{"../util/lift":"7CiSs","../observable/innerFrom":"27e4p","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"e71yK":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "auditTime", ()=>auditTime);
+var _async = require("../scheduler/async");
+var _audit = require("./audit");
+var _timer = require("../observable/timer");
+function auditTime(duration, scheduler) {
+    if (scheduler === void 0) scheduler = (0, _async.asyncScheduler);
+    return (0, _audit.audit)(function() {
+        return (0, _timer.timer)(duration, scheduler);
+    });
+}
+
+},{"../scheduler/async":"bKyC1","./audit":"bjPYH","../observable/timer":"lbPdw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7rG7K":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "debounce", ()=>debounce);
+var _lift = require("../util/lift");
+var _noop = require("../util/noop");
+var _operatorSubscriber = require("./OperatorSubscriber");
+var _innerFrom = require("../observable/innerFrom");
+function debounce(durationSelector) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        var hasValue = false;
+        var lastValue = null;
+        var durationSubscriber = null;
+        var emit = function() {
+            durationSubscriber === null || durationSubscriber === void 0 || durationSubscriber.unsubscribe();
+            durationSubscriber = null;
+            if (hasValue) {
+                hasValue = false;
+                var value = lastValue;
+                lastValue = null;
+                subscriber.next(value);
+            }
+        };
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            durationSubscriber === null || durationSubscriber === void 0 || durationSubscriber.unsubscribe();
+            hasValue = true;
+            lastValue = value;
+            durationSubscriber = (0, _operatorSubscriber.createOperatorSubscriber)(subscriber, emit, (0, _noop.noop));
+            (0, _innerFrom.innerFrom)(durationSelector(value)).subscribe(durationSubscriber);
+        }, function() {
+            emit();
+            subscriber.complete();
+        }, undefined, function() {
+            lastValue = durationSubscriber = null;
+        }));
+    });
+}
+
+},{"../util/lift":"7CiSs","../util/noop":"l8uEm","./OperatorSubscriber":"96z9b","../observable/innerFrom":"27e4p","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"kQLcN":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "debounceTime", ()=>debounceTime);
+var _async = require("../scheduler/async");
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function debounceTime(dueTime, scheduler) {
+    if (scheduler === void 0) scheduler = (0, _async.asyncScheduler);
+    return (0, _lift.operate)(function(source, subscriber) {
+        var activeTask = null;
+        var lastValue = null;
+        var lastTime = null;
+        var emit = function() {
+            if (activeTask) {
+                activeTask.unsubscribe();
+                activeTask = null;
+                var value = lastValue;
+                lastValue = null;
+                subscriber.next(value);
+            }
+        };
+        function emitWhenIdle() {
+            var targetTime = lastTime + dueTime;
+            var now = scheduler.now();
+            if (now < targetTime) {
+                activeTask = this.schedule(undefined, targetTime - now);
+                subscriber.add(activeTask);
+                return;
+            }
+            emit();
+        }
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            lastValue = value;
+            lastTime = scheduler.now();
+            if (!activeTask) {
+                activeTask = scheduler.schedule(emitWhenIdle, dueTime);
+                subscriber.add(activeTask);
+            }
+        }, function() {
+            emit();
+            subscriber.complete();
+        }, undefined, function() {
+            lastValue = activeTask = null;
+        }));
+    });
+}
+
+},{"../scheduler/async":"bKyC1","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"03Bwx":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "defaultIfEmpty", ()=>defaultIfEmpty);
@@ -3524,7 +3714,45 @@ function scanInternals(accumulator, seed, hasSeed, emitOnNext, emitBeforeComplet
     };
 }
 
-},{"./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"efPFC":[function(require,module,exports) {
+},{"./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8BFGG":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "sample", ()=>sample);
+var _lift = require("../util/lift");
+var _noop = require("../util/noop");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function sample(notifier) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        var hasValue = false;
+        var lastValue = null;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            hasValue = true;
+            lastValue = value;
+        }));
+        notifier.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function() {
+            if (hasValue) {
+                hasValue = false;
+                var value = lastValue;
+                lastValue = null;
+                subscriber.next(value);
+            }
+        }, (0, _noop.noop)));
+    });
+}
+
+},{"../util/lift":"7CiSs","../util/noop":"l8uEm","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1OyWk":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "sampleTime", ()=>sampleTime);
+var _async = require("../scheduler/async");
+var _sample = require("./sample");
+var _interval = require("../observable/interval");
+function sampleTime(period, scheduler) {
+    if (scheduler === void 0) scheduler = (0, _async.asyncScheduler);
+    return (0, _sample.sample)((0, _interval.interval)(period, scheduler));
+}
+
+},{"../scheduler/async":"bKyC1","./sample":"8BFGG","../observable/interval":"5Ox1i","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"efPFC":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "scan", ()=>scan);
@@ -3609,6 +3837,77 @@ function tap(observerOrNext, error, complete) {
     }) : (0, _identity.identity);
 }
 
-},{"../util/isFunction":"dEyyK","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","../util/identity":"8Xfg6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["j8jph","jL2mp"], "jL2mp", "parcelRequirea2a8")
+},{"../util/isFunction":"dEyyK","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","../util/identity":"8Xfg6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"16qvo":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "defaultThrottleConfig", ()=>defaultThrottleConfig);
+parcelHelpers.export(exports, "throttle", ()=>throttle);
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+var _innerFrom = require("../observable/innerFrom");
+var defaultThrottleConfig = {
+    leading: true,
+    trailing: false
+};
+function throttle(durationSelector, config) {
+    if (config === void 0) config = defaultThrottleConfig;
+    return (0, _lift.operate)(function(source, subscriber) {
+        var leading = config.leading, trailing = config.trailing;
+        var hasValue = false;
+        var sendValue = null;
+        var throttled = null;
+        var isComplete = false;
+        var endThrottling = function() {
+            throttled === null || throttled === void 0 || throttled.unsubscribe();
+            throttled = null;
+            if (trailing) {
+                send();
+                isComplete && subscriber.complete();
+            }
+        };
+        var cleanupThrottling = function() {
+            throttled = null;
+            isComplete && subscriber.complete();
+        };
+        var startThrottle = function(value) {
+            return throttled = (0, _innerFrom.innerFrom)(durationSelector(value)).subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, endThrottling, cleanupThrottling));
+        };
+        var send = function() {
+            if (hasValue) {
+                hasValue = false;
+                var value = sendValue;
+                sendValue = null;
+                subscriber.next(value);
+                !isComplete && startThrottle(value);
+            }
+        };
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            hasValue = true;
+            sendValue = value;
+            !(throttled && !throttled.closed) && (leading ? send() : startThrottle(value));
+        }, function() {
+            isComplete = true;
+            !(trailing && hasValue && throttled && !throttled.closed) && subscriber.complete();
+        }));
+    });
+}
+
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","../observable/innerFrom":"27e4p","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5oUZ3":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "throttleTime", ()=>throttleTime);
+var _async = require("../scheduler/async");
+var _throttle = require("./throttle");
+var _timer = require("../observable/timer");
+function throttleTime(duration, scheduler, config) {
+    if (scheduler === void 0) scheduler = (0, _async.asyncScheduler);
+    if (config === void 0) config = (0, _throttle.defaultThrottleConfig);
+    var duration$ = (0, _timer.timer)(duration, scheduler);
+    return (0, _throttle.throttle)(function() {
+        return duration$;
+    }, config);
+}
+
+},{"../scheduler/async":"bKyC1","./throttle":"16qvo","../observable/timer":"lbPdw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["j8jph","jL2mp"], "jL2mp", "parcelRequirea2a8")
 
 //# sourceMappingURL=index.22dc3ac3.js.map

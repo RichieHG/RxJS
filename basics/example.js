@@ -1,24 +1,22 @@
 // @ts-nocheck
-import { Observable, map, of, range, fromEvent, from, interval, timer, pluck, mapTo, filter, reduce, take, scan, tap, first, takeWhile, takeUntil, distinctUntilChanged, distinctUntilKeyChanged } from "rxjs";
+import { Observable, map, of, range, fromEvent, from, interval, timer, pluck, mapTo, filter, reduce, take, scan, tap, first, takeWhile, takeUntil, distinctUntilChanged, distinctUntilKeyChanged, debounceTime, debounce, throttleTime, asyncScheduler, sampleTime, sample, auditTime } from "rxjs";
 
-// function hello(){
-//     return 'Hello World!'
+// function* hello() {
+//     // return 'Hello World!'
+//     yield 'Hello',
+//     yield 'World'
 // }
 
-function* hello() {
-    yield 'Hello',
-        yield 'World'
-}
-
-const iterator = hello();
+// const observer = {
+//     next: value => console.log('next', value),
+//     error: error => console.log('error', error),
+//     complete: () => console.log('complete!')
+// }
+// const iterator = hello();
 // console.log(iterator.next().value);
 // console.log(iterator.next().value);
 
-const observer = {
-    next: value => console.log('next', value),
-    error: error => console.log('error', error),
-    complete: () => console.log('complete!')
-}
+
 // const observable = new Observable(subcriber => {
 //     subcriber.next('Hello');
 //     subcriber.next('World');
@@ -334,27 +332,108 @@ const observer = {
 //     distinctUntilChanged()
 // ).subscribe(console.log)
 
-const user = [
-    { name: 'Brian', loggedIn: false, token: null },
-    // { name: 'Louis', loggedIn: true, token: '123' },
-    { name: 'Brian', loggedIn: false, token: null },
-    { name: 'Brian', loggedIn: true, token: 'abc' }
-]
+// const user = [
+//     { name: 'Brian', loggedIn: false, token: null },
+//     // { name: 'Louis', loggedIn: true, token: '123' },
+//     { name: 'Brian', loggedIn: false, token: null },
+//     { name: 'Brian', loggedIn: true, token: 'abc' }
+// ]
 
-const state$ = from(user).pipe(
-    scan((accumulator, currentValue) => {
-        return { ...accumulator, ...currentValue }
-    }, {})
-);
+// const state$ = from(user).pipe(
+//     scan((accumulator, currentValue) => {
+//         return { ...accumulator, ...currentValue }
+//     }, {})
+// );
 
-const name$ = state$.pipe(
-    // distinctUntilChanged((previousValue, currentValue) => {
-    //     return previousValue.name === currentValue.name
-    // }),
-    distinctUntilKeyChanged('name'), //equals to the above function
-    map(state => state.name)
-);
+// const name$ = state$.pipe(
+//     // distinctUntilChanged((previousValue, currentValue) => {
+//     //     return previousValue.name === currentValue.name
+//     // }),
+//     distinctUntilKeyChanged('name'), //equals to the above function
+//     map(state => state.name)
+// );
 
-name$.subscribe(console.log)
+// name$.subscribe(console.log)
 
+//#endregion
+
+//#region DebounceTime
+// const click$ = fromEvent(document, 'click');
+// click$.pipe(
+//     debounceTime(1000)
+// ).subscribe(console.log)
+
+// const inputBox = document.querySelector('#text-input');
+
+// const input$ = fromEvent(inputBox, 'keyup');
+
+// input$.pipe(
+//     // debounceTime(1000),
+//     debounce(() =>  interval(1000)), // equals to => debounceTime(1000)
+//     map( event => event.target.value),
+//     distinctUntilChanged()
+// ).subscribe(console.log)
+
+//#endregion
+
+//#region ThrottleTime
+// const click$ = fromEvent(document, 'click');
+// click$.pipe(
+//     throttleTime(3000)
+// ).subscribe(console.log)
+
+// function calculateScrollPercent(element) {
+//     const {
+//         scrollTop,
+//         scrollHeight,
+//         clientHeight
+//     } = element;
+
+//     return (scrollTop/ (scrollHeight - clientHeight)) *100;
+// }
+
+// const progressBar = document.querySelector('.progress-bar');
+
+// const scroll$ =  fromEvent(document,'scroll');
+// const progress$ = scroll$.pipe(
+//     throttleTime(30, asyncScheduler, {
+//         leading: false,
+//         trailing: true
+//     }),
+//     map(({target}) => calculateScrollPercent(target.documentElement)),
+//     tap(console.log)
+// )
+// progress$.subscribe(perecent => {
+//     progressBar.style.width = `${perecent}%`
+// });
+//#endegion
+
+//#region SampleTime
+// const click$ = fromEvent(document, 'click');
+// const timer$ = interval(1000);
+
+// // click$.pipe(
+// //     sampleTime(4000),
+// //     map(({clientX, clientY}) => ({
+// //         clientX, clientY
+// //     }))
+// // ).subscribe(console.log)
+
+// timer$.pipe(
+//     sample(click$)
+// ).subscribe(console.log)
+
+
+//#endregion
+
+//#region AuditTime
+const click$ = fromEvent(document, 'click');
+const timer$ = interval(1000);
+
+click$.pipe(
+    auditTime(4000),
+    map(({clientX, clientY}) => ({
+        clientX, clientY
+    }))
+).subscribe(console.log)
 //#endregion
