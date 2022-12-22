@@ -14,7 +14,7 @@
     </header>
     <div id="app">
       <h1>Ultimate RxJS</h1>
-      <p>
+      <!-- <p>
         Start polling to request random
         <a href="https://random.dog">dog</a> images!
       </p>
@@ -22,7 +22,11 @@
       <button id="start">Start Polling</button>
       <button id="stop">Stop Polling</button>
       <br>
-      <img id="dog" src="https://random.dog/10fa025a-b04a-47d7-bfed-98747269b6c2.jpg" alt="dog!">
+      <img id="dog"
+      src="https://random.dog/10fa025a-b04a-47d7-bfed-98747269b6c2.jpg" 
+      alt="dog!"> -->
+      <!-- <input type="number" id="first">
+      <input type="number" id="second"> -->
       <!-- <h2 id="countdown"></h2>
       <div id="message"></div> -->
       <!-- <input  id="text-input">
@@ -39,7 +43,8 @@
         <input type="radio" class="radio-option" name="operator" value="concatMap">
         <label for="concatMap">concatMap</label>
       </div> -->
-      <!-- <button id="abort">Abort Mission</button> -->
+      <!-- <button id="start">Start Timer</button>
+      <button id="pause">Pause Timmer</button> -->
       <!-- <button id="login">Login</button> -->
       <!-- <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec interdum id
@@ -91,7 +96,27 @@
         fringilla dignissim tristique. Quisque vehicula sit amet leo ut
         ullamcorper.
       </p> -->
+
+      <h2>Mortgage Calculator</h2>
+      <div class="form-wrapper">
+        <label for="loanAmount"> Mortgage Amount ($) </label>
+        <input type="number" name="loanAmount" id="loanAmount">
+      </div>
+      <div class="form-wrapper">
+        <label for="interest"> Interest Rate (%) </label>
+        <input type="number" name="interest" id="interest">
+      </div>
+      <div class="form-wrapper">
+        <label for="loanLength"> Mortgage Length </label>
+        <div>
+          <input type="radio" name="loanLength" class="loanLength" value="180"> 15 yr
+          <input type="radio" name="loanLength" class="loanLength" value="360"> 30 yr        </div>
+      </div>
     </div>
+    <div>
+      Your expected monthly payment is: $<strong id="expected"></strong>
+    </div>
+    
 
     <!-- <div class="progress-bar"></div> -->
 

@@ -121,3 +121,12 @@ Take an observable that emits another observable and internally subscribe to the
 * Ignores emited values when there is an active inner observable
 * Use when quick, subsequent emissions can be ignored, like refresh button or login request.
 * ***NOTE:*** Avoid if cancellation is important, or ignoring emissions from the source would cause undesired effects
+
+### Combination Operators
+Join multiple observables into a single stream:
+* Combine multiple requests
+* Perform calculations based on multiple stream inputs
+* Tracking on values to beginning or end of stream
+* Operator like: startWith, concat, merge, combineLatest, forkJoin
+* Also sharing observable execution with the share operator
+

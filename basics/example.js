@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Observable, map, of, range, fromEvent, from, interval, timer, pluck, mapTo, filter, reduce, take, scan, tap, first, takeWhile, takeUntil, distinctUntilChanged, distinctUntilKeyChanged, debounceTime, debounce, throttleTime, asyncScheduler, sampleTime, sample, auditTime, mergeAll, mergeMap, switchMap, delay, concatMap, exhaustMap, catchError, empty, EMPTY, finalize } from "rxjs";
+import { Observable, map, of, range, fromEvent, from, interval, timer, pluck, mapTo, filter, reduce, take, scan, tap, first, takeWhile, takeUntil, distinctUntilChanged, distinctUntilKeyChanged, debounceTime, debounce, throttleTime, asyncScheduler, sampleTime, sample, auditTime, mergeAll, mergeMap, switchMap, delay, concatMap, exhaustMap, catchError, empty, EMPTY, finalize, startWith, endWith, merge, concat, combineLatest, withLatestFrom, forkJoin, retry, share } from "rxjs";
 import { ajax } from 'rxjs/ajax'
 
 // function* hello() {
@@ -592,26 +592,231 @@ import { ajax } from 'rxjs/ajax'
 
 
 //#region HTTP Polling Solution
-const startButton = document.getElementById('start');
-const stopButton = document.getElementById('stop');
-const pollingStatus = document.getElementById('polling-status');
-const dogImage = document.getElementById('dog');
+// const startButton = document.getElementById('start');
+// const stopButton = document.getElementById('stop');
+// const pollingStatus = document.getElementById('polling-status');
+// const dogImage = document.getElementById('dog');
 
-const startClick$ = fromEvent(startButton, 'click');
-const stopClick$ = fromEvent(stopButton, 'click');
+// const startClick$ = fromEvent(startButton, 'click');
+// const stopClick$ = fromEvent(stopButton, 'click');
 
-startClick$.pipe(
-    exhaustMap(() => timer(0,5000).pipe(
-        tap(() => pollingStatus.innerHTML = 'Active'),
-        switchMap(() => ajax({
-            url:'https://random.dog/woof.json',
-            method: 'GET',
-            crossDomain: true
-        }).pipe(
-            map(response => response.response.url))
-        ),
-        takeUntil(stopClick$),
-        finalize(() => pollingStatus.innerHTML = 'Stopped')
-    ))
-).subscribe(url => dogImage.src = url)
+// startClick$.pipe(
+//     exhaustMap(() => timer(0,5000).pipe(
+//         tap(() => pollingStatus.innerHTML = 'Active'),
+//         switchMap(() => ajax({
+//             url:'https://random.dog/woof.json',
+//             method: 'GET',
+//             crossDomain: true
+//         }).pipe(
+//             map(response => response.response.url))
+//         ),
+//         takeUntil(stopClick$),
+//         finalize(() => pollingStatus.innerHTML = 'Stopped')
+//     ))
+// ).subscribe(url => dogImage.src = url)
+//#endregion
+
+
+//#region StartWith
+// const numbers$ = of(1,2,3);
+
+// numbers$.pipe(
+//     startWith('a', 'b', 'c'),
+//     endWith('a', 'b', 'c')
+// ).subscribe(console.log)
+
+// const countdown = document.querySelector('#countdown');
+// const message = document.querySelector('#message');
+// const abortButton = document.querySelector('#abort')
+// const COUNTDOWN_FROM = 20;
+
+// const counter$ = interval(1000);
+// const abortClick$ = fromEvent(abortButton, 'click');
+// counter$.pipe(
+//     map(() => -1),
+//     scan((accumulator, currentValue)=> {
+//         return accumulator + currentValue;
+//     },COUNTDOWN_FROM),
+//     tap(console.log),
+//     takeWhile(value => value >= 0),
+//     takeUntil(abortClick$),
+//     startWith(COUNTDOWN_FROM)
+// ).subscribe(
+//  {
+//     next: value => {
+//         countdown.innerHTML = value;
+//         if(!value){
+//             message.innerHTML = 'Liftoff!'
+//         }
+//     },
+//     complete: () => console.log('Finish!')
+// });
+
+//#endregion
+
+
+//#region Merge
+// const keyup$ = fromEvent(document, 'keyup');
+// const click$ = fromEvent(document, 'click');
+
+// // keyup$.subscribe(console.log)
+// // click$.subscribe(console.log)
+
+// merge(keyup$, click$).subscribe(console.log)
+
+// const countdown = document.querySelector('#countdown');
+// const message = document.querySelector('#message');
+// const pauseButton = document.querySelector('#pause')
+// const startButton = document.querySelector('#start')
+// const COUNTDOWN_FROM = 10;
+
+// const counter$ = interval(1000);
+// const pauseClick$ = fromEvent(pauseButton, 'click');
+// const startClick$ = fromEvent(startButton, 'click');
+
+// merge(
+//     startClick$.pipe(map(() => true)),
+//     pauseClick$.pipe(map(() => false))
+// )
+// .pipe(
+//     switchMap( shouldStart => {
+//         return shouldStart ? counter$ : EMPTY
+//     }),
+//     map(value =>{ 
+//         console.log(value)
+//         return -1
+//     }),
+//     scan((accumulator, currentValue)=> {
+//         return accumulator + currentValue;
+//     },COUNTDOWN_FROM),
+//     tap(value => console.log('Counter:', value)),
+//     takeWhile(value => value >= 0),
+//     startWith(COUNTDOWN_FROM)
+// ).subscribe(
+//  {
+//     next: value => {
+//         countdown.innerHTML = value;
+//         if(!value){
+//         message.innerHTML = 'Liftoff!'
+//         }
+//     },
+//     complete: () => console.log('Complete!')
+// });
+//#endregion
+
+
+//#region Concat
+// const interval$ = interval(1000);
+// const delayed$ = EMPTY.pipe(delay(1000));
+
+// concat(
+//     interval$.pipe(take(3)),
+//     interval$.pipe(take(4))
+// ).subscribe(console.log)
+
+
+// delayed$.pipe(
+//     () => concat(
+//         delayed$.pipe(startWith('3...')),
+//         delayed$.pipe(startWith('2...')),
+//         delayed$.pipe(startWith('1...')),
+//         delayed$.pipe(startWith('Go!'))
+//     ),
+//     startWith('Get Ready!')
+// ).subscribe(console.log)
+//#endregion
+
+//#region CombineLatest
+
+// const firstI = document.getElementById('first');
+// const secondI = document.getElementById('second');
+
+// const keyup$ = fromEvent(document, 'keyup');
+// const click$ = fromEvent(document, 'click');
+
+// const keyupAsValue = elem => {
+//     return fromEvent(elem, 'keyup').pipe(
+//         map(event => event.target.valueAsNumber)
+//     )
+// };
+
+// click$.pipe(
+//     withLatestFrom(interval(1000))
+// ).subscribe(console.log)
+
+// combineLatest([keyupAsValue(firstI), keyupAsValue(secondI)])
+// .pipe(
+//     filter(([f,s]) => {
+//         return !isNaN(f) && !isNaN(s)
+//     }),
+//     map(([f,s]) => f + s)
+// )
+// .subscribe(console.log)
+//#endregion
+
+
+//#region ForkJoin
+// const numbers$ = of(1,2,3);
+// const letters$ = of('a','b','c');
+
+// forkJoin([numbers$,letters$.pipe(delay(3000))]).subscribe(console.log)
+// forkJoin({
+//     numbers: numbers$,
+//     letters: letters$.pipe(delay(3000))
+// }).subscribe(console.log)
+
+// const GITHUB_API_BASE = 'https://api.github.com';
+
+// forkJoin({
+//     user: ajax.getJSON(`${GITHUB_API_BASE}/users/richiehg`),
+//     repo: ajax.getJSON(`${GITHUB_API_BASE}/users/richiehg/repos`)
+// }).subscribe(console.log)
+//#endregion
+
+
+//#region Mortgage Calculator
+function calculateMortgage(interest, loanAmount, loanLength){
+    const calculatedInterest = interest/1200;
+    const total = loanAmount * calculatedInterest / (1 - Math.pow(1/(1+calculatedInterest),loanLength));
+    return total.toFixed(2);
+}
+
+const loanAmount = document.getElementById('loanAmount');
+const interest = document.getElementById('interest');
+const loanLength = document.querySelectorAll('.loanLength');
+const expected = document.getElementById('expected');
+
+const createInputValueStream = element => {
+    return fromEvent(element, 'input').pipe(
+        map(event => parseFloat(event.target.value))
+    )
+};
+
+const saveResponse = mortgageAmount => {
+    return of(mortgageAmount).pipe(delay(1000))
+}
+
+const interest$ = createInputValueStream(interest);
+const loanAmount$ = createInputValueStream(loanAmount);
+const loanLength$ = createInputValueStream(loanLength);
+
+const calculation$ = combineLatest([
+    loanAmount$,
+    interest$,
+    loanLength$
+]).pipe(
+    map(([loanAmount, interest, loanLength]) =>{
+        return calculateMortgage(interest, loanAmount, loanLength)
+    }),
+    tap(console.log),
+    filter(mortgageAmount =>  !isNaN(mortgageAmount)),
+    share()
+);
+calculation$.subscribe(mortgageAmount =>{
+    expected.innerHTML = mortgageAmount
+})
+
+calculation$.pipe(
+    mergeMap(mortgageAmount => saveResponse(mortgageAmount))
+).subscribe()
 //#endregion

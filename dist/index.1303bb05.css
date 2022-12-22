@@ -74,21 +74,28 @@ body {
   top: 0;
 }
 
-#start, #stop {
+#start, #pause {
   color: #fff;
+  border-radius: 4px;
+  margin-top: 10px;
+  padding: 8px 16px;
 }
 
 #start {
   background: green;
 }
 
-#stop {
+#pause {
   background: red;
 }
 
 #dog {
   max-width: 400px;
   max-height: 400px;
+}
+
+#abort {
+  background: red;
 }
 
 /*# sourceMappingURL=index.1303bb05.css.map */

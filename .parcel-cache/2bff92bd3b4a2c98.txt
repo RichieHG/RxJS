@@ -30,14 +30,14 @@
 86C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\parent-module\index.js133155294189482564 0
 88C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\node-addon-api\nothing.c133155294187868541 0
 110C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\esm5\internal\operators\partition.js133155274745702603 0
-55C:\Users\neftali.hernandez\Documents\Training\RxJS\dist133161379173335746 1
+55C:\Users\neftali.hernandez\Documents\Training\RxJS\dist133162163519087907 1
 106C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\caniuse-lite\data\features\cryptography.js133155294218615119 0
 83C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\get-port\index.d.ts133155294201860084 0
 98C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\css-tree\lib\syntax\pseudo\lang.js133155294214731407 0
 100C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\@parcel\codeframe\test\fixtures\a.js133155294191353681 0
 98C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\svgo\plugins\removeStyleElement.js133155294212486297 0
 77C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\tslib\modules133155274736863198 1
-61C:\Users\neftali.hernandez\Documents\Training\RxJS\index.html133161379675730919 0
+61C:\Users\neftali.hernandez\Documents\Training\RxJS\index.html133162148535797537 0
 89C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\css-select\lib\compile.js133155294192277246 0
 72C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\entities133155294201390148 1
 115C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\caniuse-lite\data\features\native-filesystem-api.js133155294233367650 0
@@ -87,7 +87,7 @@
 111C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\@parcel\transformer-json\src\JSONTransformer.js133155294196160568 0
 106C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\esm5\internal\operators\count.js133155274741176682 0
 91C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\src\operators\index.ts133155274763990059 0
-60C:\Users\neftali.hernandez\Documents\Training\RxJS\README.md133161361182081271 0
+60C:\Users\neftali.hernandez\Documents\Training\RxJS\README.md133161409987942743 0
 114C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\cjs\internal\scheduler\animationFrame.js133155274739106673 0
 87C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\esm\webSocket133155274755555236 1
 118C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\operators\bufferWhen.d.ts.map133155274751815213 0
@@ -133,7 +133,7 @@
 114C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\esm5\internal\operators\sequenceEqual.js133155274747042676 0
 113C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\observable\forkJoin.d.ts133155274763629984 0
 115C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\esm\internal\util\mapOneOrManyArgs.js.map133155274756275167 0
-61C:\Users\neftali.hernandez\Documents\Training\RxJS\styles.css133161374027591330 0
+61C:\Users\neftali.hernandez\Documents\Training\RxJS\styles.css133161422252397374 0
 105C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\.bin\node-gyp-build-optional-packages.cmd133155294241908154 0
 104C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\src\internal\observable\forkJoin.ts133155274763639997 0
 112C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\esm5\internal\util\mapOneOrManyArgs.js133155274744502545 0
@@ -2357,7 +2357,7 @@
 115C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\esm\internal\operators\subscribeOn.js.map133155274759389634 0
 112C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\scheduler\asap.d.ts.map133155274751205187 0
 118C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\scheduler\AsapAction.d.ts.map133155274751235232 0
-78C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\index.1303bb05.css.map133161379173267777 0
+78C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\index.1303bb05.css.map133162155982937107 0
 115C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\operators\groupBy.d.ts.map133155274755085180 0
 117C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\scheduler\AsapScheduler.d.ts133155274761950023 0
 100C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\esm\internal\Observable.js133155274745272533 0
@@ -2547,7 +2547,7 @@
 111C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\operators\flatMap.d.ts133155274763600035 0
 115C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\operators\flatMap.d.ts.map133155274754795170 0
 118C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\operators\windowWhen.d.ts.map133155274761139991 0
-74C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\index.1303bb05.css133161379172905592 0
+74C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\index.1303bb05.css133162155982887126 0
 111C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\operators\groupBy.d.ts133155274763760008 0
 111C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\rxjs\dist\types\internal\operators\isEmpty.d.ts133155274764120029 0
 98C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\css-tree\lib\syntax\node\Number.js133155294216780585 0
@@ -6532,8 +6532,8 @@
 77C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\.bin\svgo.ps1133155294241928094 0
 75C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\.bin\terser133155294241948111 0
 79C:\Users\neftali.hernandez\Documents\Training\RxJS\node_modules\.bin\terser.ps1133155294241948111 0
-73C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\index.22dc3ac3.js133161379173195749 0
-77C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\index.22dc3ac3.js.map133161379173315767 0
-66C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\index.html133161379173248217 0
+73C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\index.22dc3ac3.js133162163519027903 0
+77C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\index.22dc3ac3.js.map133162163519067905 0
+66C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\index.html133162170009023039 0
 72C:\Users\neftali.hernandez\Documents\Training\RxJS\dist\RxJS.3464ddca.js133155296798783285 0
-68C:\Users\neftali.hernandez\Documents\Training\RxJS\basics\example.js133161370499026035 0
+68C:\Users\neftali.hernandez\Documents\Training\RxJS\basics\example.js133162163517716922 0

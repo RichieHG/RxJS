@@ -80,15 +80,18 @@ body {
   background: #ff15b7;
 }
 
-#start, #stop{
+#start, #pause{
   color: white;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-top: 10px;
 }
 
 #start {
   background: green;
 }
 
-#stop{
+#pause{
   background: red;
 }
 
@@ -96,4 +99,9 @@ body {
   max-width: 400px;
   max-height: 400px;
   
+}
+
+
+#abort{
+  background: red;
 }

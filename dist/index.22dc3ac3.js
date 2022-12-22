@@ -1001,17 +1001,185 @@ var _ajax = require("rxjs/ajax");
 // })
 //#endregion
 //#region HTTP Polling Solution
-const startButton = document.getElementById("start");
-const stopButton = document.getElementById("stop");
-const pollingStatus = document.getElementById("polling-status");
-const dogImage = document.getElementById("dog");
-const startClick$ = (0, _rxjs.fromEvent)(startButton, "click");
-const stopClick$ = (0, _rxjs.fromEvent)(stopButton, "click");
-startClick$.pipe((0, _rxjs.exhaustMap)(()=>(0, _rxjs.timer)(0, 5000).pipe((0, _rxjs.tap)(()=>pollingStatus.innerHTML = "Active"), (0, _rxjs.switchMap)(()=>(0, _ajax.ajax)({
-            url: "https://random.dog/woof.json",
-            method: "GET",
-            crossDomain: true
-        }).pipe((0, _rxjs.map)((response)=>response.response.url))), (0, _rxjs.takeUntil)(stopClick$), (0, _rxjs.finalize)(()=>pollingStatus.innerHTML = "Stopped")))).subscribe((url)=>dogImage.src = url) //#endregion
+// const startButton = document.getElementById('start');
+// const stopButton = document.getElementById('stop');
+// const pollingStatus = document.getElementById('polling-status');
+// const dogImage = document.getElementById('dog');
+// const startClick$ = fromEvent(startButton, 'click');
+// const stopClick$ = fromEvent(stopButton, 'click');
+// startClick$.pipe(
+//     exhaustMap(() => timer(0,5000).pipe(
+//         tap(() => pollingStatus.innerHTML = 'Active'),
+//         switchMap(() => ajax({
+//             url:'https://random.dog/woof.json',
+//             method: 'GET',
+//             crossDomain: true
+//         }).pipe(
+//             map(response => response.response.url))
+//         ),
+//         takeUntil(stopClick$),
+//         finalize(() => pollingStatus.innerHTML = 'Stopped')
+//     ))
+// ).subscribe(url => dogImage.src = url)
+//#endregion
+//#region StartWith
+// const numbers$ = of(1,2,3);
+// numbers$.pipe(
+//     startWith('a', 'b', 'c'),
+//     endWith('a', 'b', 'c')
+// ).subscribe(console.log)
+// const countdown = document.querySelector('#countdown');
+// const message = document.querySelector('#message');
+// const abortButton = document.querySelector('#abort')
+// const COUNTDOWN_FROM = 20;
+// const counter$ = interval(1000);
+// const abortClick$ = fromEvent(abortButton, 'click');
+// counter$.pipe(
+//     map(() => -1),
+//     scan((accumulator, currentValue)=> {
+//         return accumulator + currentValue;
+//     },COUNTDOWN_FROM),
+//     tap(console.log),
+//     takeWhile(value => value >= 0),
+//     takeUntil(abortClick$),
+//     startWith(COUNTDOWN_FROM)
+// ).subscribe(
+//  {
+//     next: value => {
+//         countdown.innerHTML = value;
+//         if(!value){
+//             message.innerHTML = 'Liftoff!'
+//         }
+//     },
+//     complete: () => console.log('Finish!')
+// });
+//#endregion
+//#region Merge
+// const keyup$ = fromEvent(document, 'keyup');
+// const click$ = fromEvent(document, 'click');
+// // keyup$.subscribe(console.log)
+// // click$.subscribe(console.log)
+// merge(keyup$, click$).subscribe(console.log)
+// const countdown = document.querySelector('#countdown');
+// const message = document.querySelector('#message');
+// const pauseButton = document.querySelector('#pause')
+// const startButton = document.querySelector('#start')
+// const COUNTDOWN_FROM = 10;
+// const counter$ = interval(1000);
+// const pauseClick$ = fromEvent(pauseButton, 'click');
+// const startClick$ = fromEvent(startButton, 'click');
+// merge(
+//     startClick$.pipe(map(() => true)),
+//     pauseClick$.pipe(map(() => false))
+// )
+// .pipe(
+//     switchMap( shouldStart => {
+//         return shouldStart ? counter$ : EMPTY
+//     }),
+//     map(value =>{ 
+//         console.log(value)
+//         return -1
+//     }),
+//     scan((accumulator, currentValue)=> {
+//         return accumulator + currentValue;
+//     },COUNTDOWN_FROM),
+//     tap(value => console.log('Counter:', value)),
+//     takeWhile(value => value >= 0),
+//     startWith(COUNTDOWN_FROM)
+// ).subscribe(
+//  {
+//     next: value => {
+//         countdown.innerHTML = value;
+//         if(!value){
+//         message.innerHTML = 'Liftoff!'
+//         }
+//     },
+//     complete: () => console.log('Complete!')
+// });
+//#endregion
+//#region Concat
+// const interval$ = interval(1000);
+// const delayed$ = EMPTY.pipe(delay(1000));
+// concat(
+//     interval$.pipe(take(3)),
+//     interval$.pipe(take(4))
+// ).subscribe(console.log)
+// delayed$.pipe(
+//     () => concat(
+//         delayed$.pipe(startWith('3...')),
+//         delayed$.pipe(startWith('2...')),
+//         delayed$.pipe(startWith('1...')),
+//         delayed$.pipe(startWith('Go!'))
+//     ),
+//     startWith('Get Ready!')
+// ).subscribe(console.log)
+//#endregion
+//#region CombineLatest
+// const firstI = document.getElementById('first');
+// const secondI = document.getElementById('second');
+// const keyup$ = fromEvent(document, 'keyup');
+// const click$ = fromEvent(document, 'click');
+// const keyupAsValue = elem => {
+//     return fromEvent(elem, 'keyup').pipe(
+//         map(event => event.target.valueAsNumber)
+//     )
+// };
+// click$.pipe(
+//     withLatestFrom(interval(1000))
+// ).subscribe(console.log)
+// combineLatest([keyupAsValue(firstI), keyupAsValue(secondI)])
+// .pipe(
+//     filter(([f,s]) => {
+//         return !isNaN(f) && !isNaN(s)
+//     }),
+//     map(([f,s]) => f + s)
+// )
+// .subscribe(console.log)
+//#endregion
+//#region ForkJoin
+// const numbers$ = of(1,2,3);
+// const letters$ = of('a','b','c');
+// forkJoin([numbers$,letters$.pipe(delay(3000))]).subscribe(console.log)
+// forkJoin({
+//     numbers: numbers$,
+//     letters: letters$.pipe(delay(3000))
+// }).subscribe(console.log)
+// const GITHUB_API_BASE = 'https://api.github.com';
+// forkJoin({
+//     user: ajax.getJSON(`${GITHUB_API_BASE}/users/richiehg`),
+//     repo: ajax.getJSON(`${GITHUB_API_BASE}/users/richiehg/repos`)
+// }).subscribe(console.log)
+//#endregion
+//#region Mortgage Calculator
+function calculateMortgage(interest, loanAmount, loanLength) {
+    const calculatedInterest = interest / 1200;
+    const total = loanAmount * calculatedInterest / (1 - Math.pow(1 / (1 + calculatedInterest), loanLength));
+    return total.toFixed(2);
+}
+const loanAmount = document.getElementById("loanAmount");
+const interest = document.getElementById("interest");
+const loanLength = document.querySelectorAll(".loanLength");
+const expected = document.getElementById("expected");
+const createInputValueStream = (element)=>{
+    return (0, _rxjs.fromEvent)(element, "input").pipe((0, _rxjs.map)((event)=>parseFloat(event.target.value)));
+};
+const saveResponse = (mortgageAmount)=>{
+    return (0, _rxjs.of)(mortgageAmount).pipe((0, _rxjs.delay)(1000));
+};
+const interest$ = createInputValueStream(interest);
+const loanAmount$ = createInputValueStream(loanAmount);
+const loanLength$ = createInputValueStream(loanLength);
+const calculation$ = (0, _rxjs.combineLatest)([
+    loanAmount$,
+    interest$,
+    loanLength$
+]).pipe((0, _rxjs.map)(([loanAmount, interest, loanLength])=>{
+    return calculateMortgage(interest, loanAmount, loanLength);
+}), (0, _rxjs.tap)(console.log), (0, _rxjs.filter)((mortgageAmount)=>!isNaN(mortgageAmount)), (0, _rxjs.share)());
+calculation$.subscribe((mortgageAmount)=>{
+    expected.innerHTML = mortgageAmount;
+});
+calculation$.pipe((0, _rxjs.mergeMap)((mortgageAmount)=>saveResponse(mortgageAmount))).subscribe() //#endregion
 ;
 
 },{"rxjs":"lLy7s","rxjs/ajax":"6UvnK"}],"lLy7s":[function(require,module,exports) {
@@ -1357,7 +1525,7 @@ var _withLatestFrom = require("./internal/operators/withLatestFrom");
 var _zipAll = require("./internal/operators/zipAll");
 var _zipWith = require("./internal/operators/zipWith");
 
-},{"./internal/Observable":"4Jvxr","./internal/observable/ConnectableObservable":false,"./internal/symbol/observable":"byHtV","./internal/observable/dom/animationFrames":false,"./internal/Subject":false,"./internal/BehaviorSubject":false,"./internal/ReplaySubject":false,"./internal/AsyncSubject":false,"./internal/scheduler/asap":false,"./internal/scheduler/async":"bKyC1","./internal/scheduler/queue":false,"./internal/scheduler/animationFrame":false,"./internal/scheduler/VirtualTimeScheduler":false,"./internal/Scheduler":"90yvc","./internal/Subscription":"lFyhg","./internal/Subscriber":"1VFFQ","./internal/Notification":false,"./internal/util/pipe":"1GN6U","./internal/util/noop":"l8uEm","./internal/util/identity":"8Xfg6","./internal/util/isObservable":false,"./internal/lastValueFrom":false,"./internal/firstValueFrom":false,"./internal/util/ArgumentOutOfRangeError":false,"./internal/util/EmptyError":"6OnNQ","./internal/util/NotFoundError":false,"./internal/util/ObjectUnsubscribedError":false,"./internal/util/SequenceError":false,"./internal/operators/timeout":false,"./internal/util/UnsubscriptionError":"GSF7Z","./internal/observable/bindCallback":false,"./internal/observable/bindNodeCallback":false,"./internal/observable/combineLatest":false,"./internal/observable/concat":"5g0IT","./internal/observable/connectable":false,"./internal/observable/defer":false,"./internal/observable/empty":"dGHVG","./internal/observable/forkJoin":false,"./internal/observable/from":"dBWag","./internal/observable/fromEvent":"eTJLc","./internal/observable/fromEventPattern":false,"./internal/observable/generate":false,"./internal/observable/iif":false,"./internal/observable/interval":"5Ox1i","./internal/observable/merge":false,"./internal/observable/never":false,"./internal/observable/of":"lnQPU","./internal/observable/onErrorResumeNext":false,"./internal/observable/pairs":false,"./internal/observable/partition":false,"./internal/observable/race":false,"./internal/observable/range":"b4lqr","./internal/observable/throwError":false,"./internal/observable/timer":"lbPdw","./internal/observable/using":false,"./internal/observable/zip":false,"./internal/scheduled/scheduled":"l8eo2","./internal/types":"c58fk","./internal/config":"fX0gC","./internal/operators/audit":"bjPYH","./internal/operators/auditTime":"e71yK","./internal/operators/buffer":false,"./internal/operators/bufferCount":false,"./internal/operators/bufferTime":false,"./internal/operators/bufferToggle":false,"./internal/operators/bufferWhen":false,"./internal/operators/catchError":"jKP5Q","./internal/operators/combineAll":false,"./internal/operators/combineLatestAll":false,"./internal/operators/combineLatestWith":false,"./internal/operators/concatAll":"77QLf","./internal/operators/concatMap":"9ecCI","./internal/operators/concatMapTo":false,"./internal/operators/concatWith":false,"./internal/operators/connect":false,"./internal/operators/count":false,"./internal/operators/debounce":"7rG7K","./internal/operators/debounceTime":"kQLcN","./internal/operators/defaultIfEmpty":"03Bwx","./internal/operators/delay":"b7eNt","./internal/operators/delayWhen":"5MGDR","./internal/operators/dematerialize":false,"./internal/operators/distinct":false,"./internal/operators/distinctUntilChanged":"knFKV","./internal/operators/distinctUntilKeyChanged":"6inhx","./internal/operators/elementAt":false,"./internal/operators/endWith":false,"./internal/operators/every":false,"./internal/operators/exhaust":false,"./internal/operators/exhaustAll":false,"./internal/operators/exhaustMap":"gxT2U","./internal/operators/expand":false,"./internal/operators/filter":"gA0i5","./internal/operators/finalize":"j5G9e","./internal/operators/find":false,"./internal/operators/findIndex":false,"./internal/operators/first":"1Jl7y","./internal/operators/groupBy":false,"./internal/operators/ignoreElements":"lmnKY","./internal/operators/isEmpty":false,"./internal/operators/last":false,"./internal/operators/map":"25iUP","./internal/operators/mapTo":"8NiL4","./internal/operators/materialize":false,"./internal/operators/max":false,"./internal/operators/mergeAll":"iAqyw","./internal/operators/flatMap":false,"./internal/operators/mergeMap":"1Kzmb","./internal/operators/mergeMapTo":false,"./internal/operators/mergeScan":false,"./internal/operators/mergeWith":false,"./internal/operators/min":false,"./internal/operators/multicast":false,"./internal/operators/observeOn":"21OcU","./internal/operators/onErrorResumeNextWith":false,"./internal/operators/pairwise":false,"./internal/operators/pluck":"167Lv","./internal/operators/publish":false,"./internal/operators/publishBehavior":false,"./internal/operators/publishLast":false,"./internal/operators/publishReplay":false,"./internal/operators/raceWith":false,"./internal/operators/reduce":"8K6iO","./internal/operators/repeat":false,"./internal/operators/repeatWhen":false,"./internal/operators/retry":false,"./internal/operators/retryWhen":false,"./internal/operators/refCount":false,"./internal/operators/sample":"8BFGG","./internal/operators/sampleTime":"1OyWk","./internal/operators/scan":"efPFC","./internal/operators/sequenceEqual":false,"./internal/operators/share":false,"./internal/operators/shareReplay":false,"./internal/operators/single":false,"./internal/operators/skip":false,"./internal/operators/skipLast":false,"./internal/operators/skipUntil":false,"./internal/operators/skipWhile":false,"./internal/operators/startWith":false,"./internal/operators/subscribeOn":"3SFol","./internal/operators/switchAll":false,"./internal/operators/switchMap":"jbzg2","./internal/operators/switchMapTo":false,"./internal/operators/switchScan":false,"./internal/operators/take":"jxxom","./internal/operators/takeLast":false,"./internal/operators/takeUntil":"aAb4W","./internal/operators/takeWhile":"feQNd","./internal/operators/tap":"dVdZH","./internal/operators/throttle":"16qvo","./internal/operators/throttleTime":"5oUZ3","./internal/operators/throwIfEmpty":"1CMQN","./internal/operators/timeInterval":false,"./internal/operators/timeoutWith":false,"./internal/operators/timestamp":false,"./internal/operators/toArray":false,"./internal/operators/window":false,"./internal/operators/windowCount":false,"./internal/operators/windowTime":false,"./internal/operators/windowToggle":false,"./internal/operators/windowWhen":false,"./internal/operators/withLatestFrom":false,"./internal/operators/zipAll":false,"./internal/operators/zipWith":false,"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Jvxr":[function(require,module,exports) {
+},{"./internal/Observable":"4Jvxr","./internal/observable/ConnectableObservable":false,"./internal/symbol/observable":"byHtV","./internal/observable/dom/animationFrames":false,"./internal/Subject":"94RSe","./internal/BehaviorSubject":false,"./internal/ReplaySubject":false,"./internal/AsyncSubject":false,"./internal/scheduler/asap":false,"./internal/scheduler/async":"bKyC1","./internal/scheduler/queue":false,"./internal/scheduler/animationFrame":false,"./internal/scheduler/VirtualTimeScheduler":false,"./internal/Scheduler":"90yvc","./internal/Subscription":"lFyhg","./internal/Subscriber":"1VFFQ","./internal/Notification":false,"./internal/util/pipe":"1GN6U","./internal/util/noop":"l8uEm","./internal/util/identity":"8Xfg6","./internal/util/isObservable":false,"./internal/lastValueFrom":false,"./internal/firstValueFrom":false,"./internal/util/ArgumentOutOfRangeError":false,"./internal/util/EmptyError":"6OnNQ","./internal/util/NotFoundError":false,"./internal/util/ObjectUnsubscribedError":"6Gcwa","./internal/util/SequenceError":false,"./internal/operators/timeout":false,"./internal/util/UnsubscriptionError":"GSF7Z","./internal/observable/bindCallback":false,"./internal/observable/bindNodeCallback":false,"./internal/observable/combineLatest":"klIwv","./internal/observable/concat":"5g0IT","./internal/observable/connectable":false,"./internal/observable/defer":false,"./internal/observable/empty":"dGHVG","./internal/observable/forkJoin":"fjZ2d","./internal/observable/from":"dBWag","./internal/observable/fromEvent":"eTJLc","./internal/observable/fromEventPattern":false,"./internal/observable/generate":false,"./internal/observable/iif":false,"./internal/observable/interval":"5Ox1i","./internal/observable/merge":"c41K6","./internal/observable/never":false,"./internal/observable/of":"lnQPU","./internal/observable/onErrorResumeNext":false,"./internal/observable/pairs":false,"./internal/observable/partition":false,"./internal/observable/race":false,"./internal/observable/range":"b4lqr","./internal/observable/throwError":false,"./internal/observable/timer":"lbPdw","./internal/observable/using":false,"./internal/observable/zip":false,"./internal/scheduled/scheduled":"l8eo2","./internal/types":"c58fk","./internal/config":"fX0gC","./internal/operators/audit":"bjPYH","./internal/operators/auditTime":"e71yK","./internal/operators/buffer":false,"./internal/operators/bufferCount":false,"./internal/operators/bufferTime":false,"./internal/operators/bufferToggle":false,"./internal/operators/bufferWhen":false,"./internal/operators/catchError":"jKP5Q","./internal/operators/combineAll":false,"./internal/operators/combineLatestAll":false,"./internal/operators/combineLatestWith":false,"./internal/operators/concatAll":"77QLf","./internal/operators/concatMap":"9ecCI","./internal/operators/concatMapTo":false,"./internal/operators/concatWith":false,"./internal/operators/connect":false,"./internal/operators/count":false,"./internal/operators/debounce":"7rG7K","./internal/operators/debounceTime":"kQLcN","./internal/operators/defaultIfEmpty":"03Bwx","./internal/operators/delay":"b7eNt","./internal/operators/delayWhen":"5MGDR","./internal/operators/dematerialize":false,"./internal/operators/distinct":false,"./internal/operators/distinctUntilChanged":"knFKV","./internal/operators/distinctUntilKeyChanged":"6inhx","./internal/operators/elementAt":false,"./internal/operators/endWith":"2XhC4","./internal/operators/every":false,"./internal/operators/exhaust":false,"./internal/operators/exhaustAll":false,"./internal/operators/exhaustMap":"gxT2U","./internal/operators/expand":false,"./internal/operators/filter":"gA0i5","./internal/operators/finalize":"j5G9e","./internal/operators/find":false,"./internal/operators/findIndex":false,"./internal/operators/first":"1Jl7y","./internal/operators/groupBy":false,"./internal/operators/ignoreElements":"lmnKY","./internal/operators/isEmpty":false,"./internal/operators/last":false,"./internal/operators/map":"25iUP","./internal/operators/mapTo":"8NiL4","./internal/operators/materialize":false,"./internal/operators/max":false,"./internal/operators/mergeAll":"iAqyw","./internal/operators/flatMap":false,"./internal/operators/mergeMap":"1Kzmb","./internal/operators/mergeMapTo":false,"./internal/operators/mergeScan":false,"./internal/operators/mergeWith":false,"./internal/operators/min":false,"./internal/operators/multicast":false,"./internal/operators/observeOn":"21OcU","./internal/operators/onErrorResumeNextWith":false,"./internal/operators/pairwise":false,"./internal/operators/pluck":"167Lv","./internal/operators/publish":false,"./internal/operators/publishBehavior":false,"./internal/operators/publishLast":false,"./internal/operators/publishReplay":false,"./internal/operators/raceWith":false,"./internal/operators/reduce":"8K6iO","./internal/operators/repeat":false,"./internal/operators/repeatWhen":false,"./internal/operators/retry":"k0C7t","./internal/operators/retryWhen":false,"./internal/operators/refCount":false,"./internal/operators/sample":"8BFGG","./internal/operators/sampleTime":"1OyWk","./internal/operators/scan":"efPFC","./internal/operators/sequenceEqual":false,"./internal/operators/share":"ivofG","./internal/operators/shareReplay":false,"./internal/operators/single":false,"./internal/operators/skip":false,"./internal/operators/skipLast":false,"./internal/operators/skipUntil":false,"./internal/operators/skipWhile":false,"./internal/operators/startWith":"kMx2y","./internal/operators/subscribeOn":"3SFol","./internal/operators/switchAll":false,"./internal/operators/switchMap":"jbzg2","./internal/operators/switchMapTo":false,"./internal/operators/switchScan":false,"./internal/operators/take":"jxxom","./internal/operators/takeLast":false,"./internal/operators/takeUntil":"aAb4W","./internal/operators/takeWhile":"feQNd","./internal/operators/tap":"dVdZH","./internal/operators/throttle":"16qvo","./internal/operators/throttleTime":"5oUZ3","./internal/operators/throwIfEmpty":"1CMQN","./internal/operators/timeInterval":false,"./internal/operators/timeoutWith":false,"./internal/operators/timestamp":false,"./internal/operators/toArray":false,"./internal/operators/window":false,"./internal/operators/windowCount":false,"./internal/operators/windowTime":false,"./internal/operators/windowToggle":false,"./internal/operators/windowWhen":false,"./internal/operators/withLatestFrom":"lzK5x","./internal/operators/zipAll":false,"./internal/operators/zipWith":false,"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Jvxr":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Observable", ()=>Observable);
@@ -2375,7 +2543,174 @@ function identity(x) {
     return x;
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bKyC1":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"94RSe":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Subject", ()=>Subject);
+parcelHelpers.export(exports, "AnonymousSubject", ()=>AnonymousSubject);
+var _tslib = require("tslib");
+var _observable = require("./Observable");
+var _subscription = require("./Subscription");
+var _objectUnsubscribedError = require("./util/ObjectUnsubscribedError");
+var _arrRemove = require("./util/arrRemove");
+var _errorContext = require("./util/errorContext");
+var Subject = function(_super) {
+    (0, _tslib.__extends)(Subject, _super);
+    function Subject() {
+        var _this = _super.call(this) || this;
+        _this.closed = false;
+        _this.currentObservers = null;
+        _this.observers = [];
+        _this.isStopped = false;
+        _this.hasError = false;
+        _this.thrownError = null;
+        return _this;
+    }
+    Subject.prototype.lift = function(operator) {
+        var subject = new AnonymousSubject(this, this);
+        subject.operator = operator;
+        return subject;
+    };
+    Subject.prototype._throwIfClosed = function() {
+        if (this.closed) throw new (0, _objectUnsubscribedError.ObjectUnsubscribedError)();
+    };
+    Subject.prototype.next = function(value) {
+        var _this = this;
+        (0, _errorContext.errorContext)(function() {
+            var e_1, _a;
+            _this._throwIfClosed();
+            if (!_this.isStopped) {
+                if (!_this.currentObservers) _this.currentObservers = Array.from(_this.observers);
+                try {
+                    for(var _b = (0, _tslib.__values)(_this.currentObservers), _c = _b.next(); !_c.done; _c = _b.next()){
+                        var observer = _c.value;
+                        observer.next(value);
+                    }
+                } catch (e_1_1) {
+                    e_1 = {
+                        error: e_1_1
+                    };
+                } finally{
+                    try {
+                        if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+                    } finally{
+                        if (e_1) throw e_1.error;
+                    }
+                }
+            }
+        });
+    };
+    Subject.prototype.error = function(err) {
+        var _this = this;
+        (0, _errorContext.errorContext)(function() {
+            _this._throwIfClosed();
+            if (!_this.isStopped) {
+                _this.hasError = _this.isStopped = true;
+                _this.thrownError = err;
+                var observers = _this.observers;
+                while(observers.length)observers.shift().error(err);
+            }
+        });
+    };
+    Subject.prototype.complete = function() {
+        var _this = this;
+        (0, _errorContext.errorContext)(function() {
+            _this._throwIfClosed();
+            if (!_this.isStopped) {
+                _this.isStopped = true;
+                var observers = _this.observers;
+                while(observers.length)observers.shift().complete();
+            }
+        });
+    };
+    Subject.prototype.unsubscribe = function() {
+        this.isStopped = this.closed = true;
+        this.observers = this.currentObservers = null;
+    };
+    Object.defineProperty(Subject.prototype, "observed", {
+        get: function() {
+            var _a;
+            return ((_a = this.observers) === null || _a === void 0 ? void 0 : _a.length) > 0;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Subject.prototype._trySubscribe = function(subscriber) {
+        this._throwIfClosed();
+        return _super.prototype._trySubscribe.call(this, subscriber);
+    };
+    Subject.prototype._subscribe = function(subscriber) {
+        this._throwIfClosed();
+        this._checkFinalizedStatuses(subscriber);
+        return this._innerSubscribe(subscriber);
+    };
+    Subject.prototype._innerSubscribe = function(subscriber) {
+        var _this = this;
+        var _a = this, hasError = _a.hasError, isStopped = _a.isStopped, observers = _a.observers;
+        if (hasError || isStopped) return 0, _subscription.EMPTY_SUBSCRIPTION;
+        this.currentObservers = null;
+        observers.push(subscriber);
+        return new (0, _subscription.Subscription)(function() {
+            _this.currentObservers = null;
+            (0, _arrRemove.arrRemove)(observers, subscriber);
+        });
+    };
+    Subject.prototype._checkFinalizedStatuses = function(subscriber) {
+        var _a = this, hasError = _a.hasError, thrownError = _a.thrownError, isStopped = _a.isStopped;
+        if (hasError) subscriber.error(thrownError);
+        else if (isStopped) subscriber.complete();
+    };
+    Subject.prototype.asObservable = function() {
+        var observable = new (0, _observable.Observable)();
+        observable.source = this;
+        return observable;
+    };
+    Subject.create = function(destination, source) {
+        return new AnonymousSubject(destination, source);
+    };
+    return Subject;
+}((0, _observable.Observable));
+var AnonymousSubject = function(_super) {
+    (0, _tslib.__extends)(AnonymousSubject, _super);
+    function AnonymousSubject(destination, source) {
+        var _this = _super.call(this) || this;
+        _this.destination = destination;
+        _this.source = source;
+        return _this;
+    }
+    AnonymousSubject.prototype.next = function(value) {
+        var _a, _b;
+        (_b = (_a = this.destination) === null || _a === void 0 ? void 0 : _a.next) === null || _b === void 0 || _b.call(_a, value);
+    };
+    AnonymousSubject.prototype.error = function(err) {
+        var _a, _b;
+        (_b = (_a = this.destination) === null || _a === void 0 ? void 0 : _a.error) === null || _b === void 0 || _b.call(_a, err);
+    };
+    AnonymousSubject.prototype.complete = function() {
+        var _a, _b;
+        (_b = (_a = this.destination) === null || _a === void 0 ? void 0 : _a.complete) === null || _b === void 0 || _b.call(_a);
+    };
+    AnonymousSubject.prototype._subscribe = function(subscriber) {
+        var _a, _b;
+        return (_b = (_a = this.source) === null || _a === void 0 ? void 0 : _a.subscribe(subscriber)) !== null && _b !== void 0 ? _b : (0, _subscription.EMPTY_SUBSCRIPTION);
+    };
+    return AnonymousSubject;
+}(Subject);
+
+},{"tslib":"lRdW5","./Observable":"4Jvxr","./Subscription":"lFyhg","./util/ObjectUnsubscribedError":"6Gcwa","./util/arrRemove":"dLHeW","./util/errorContext":"gU38l","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6Gcwa":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "ObjectUnsubscribedError", ()=>ObjectUnsubscribedError);
+var _createErrorClass = require("./createErrorClass");
+var ObjectUnsubscribedError = (0, _createErrorClass.createErrorClass)(function(_super) {
+    return function ObjectUnsubscribedErrorImpl() {
+        _super(this);
+        this.name = "ObjectUnsubscribedError";
+        this.message = "object unsubscribed";
+    };
+});
+
+},{"./createErrorClass":"i1v8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"bKyC1":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "asyncScheduler", ()=>asyncScheduler);
@@ -2583,153 +2918,148 @@ var EmptyError = (0, _createErrorClass.createErrorClass)(function(_super) {
     };
 });
 
-},{"./createErrorClass":"i1v8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5g0IT":[function(require,module,exports) {
+},{"./createErrorClass":"i1v8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"klIwv":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "concat", ()=>concat);
-var _concatAll = require("../operators/concatAll");
-var _args = require("../util/args");
+parcelHelpers.export(exports, "combineLatest", ()=>combineLatest);
+parcelHelpers.export(exports, "combineLatestInit", ()=>combineLatestInit);
+var _observable = require("../Observable");
+var _argsArgArrayOrObject = require("../util/argsArgArrayOrObject");
 var _from = require("./from");
-function concat() {
+var _identity = require("../util/identity");
+var _mapOneOrManyArgs = require("../util/mapOneOrManyArgs");
+var _args = require("../util/args");
+var _createObject = require("../util/createObject");
+var _operatorSubscriber = require("../operators/OperatorSubscriber");
+var _executeSchedule = require("../util/executeSchedule");
+function combineLatest() {
     var args = [];
     for(var _i = 0; _i < arguments.length; _i++)args[_i] = arguments[_i];
-    return (0, _concatAll.concatAll)()((0, _from.from)(args, (0, _args.popScheduler)(args)));
+    var scheduler = (0, _args.popScheduler)(args);
+    var resultSelector = (0, _args.popResultSelector)(args);
+    var _a = (0, _argsArgArrayOrObject.argsArgArrayOrObject)(args), observables = _a.args, keys = _a.keys;
+    if (observables.length === 0) return (0, _from.from)([], scheduler);
+    var result = new (0, _observable.Observable)(combineLatestInit(observables, scheduler, keys ? function(values) {
+        return (0, _createObject.createObject)(keys, values);
+    } : (0, _identity.identity)));
+    return resultSelector ? result.pipe((0, _mapOneOrManyArgs.mapOneOrManyArgs)(resultSelector)) : result;
 }
-
-},{"../operators/concatAll":"77QLf","../util/args":"i1opM","./from":"dBWag","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"77QLf":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "concatAll", ()=>concatAll);
-var _mergeAll = require("./mergeAll");
-function concatAll() {
-    return (0, _mergeAll.mergeAll)(1);
-}
-
-},{"./mergeAll":"iAqyw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iAqyw":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "mergeAll", ()=>mergeAll);
-var _mergeMap = require("./mergeMap");
-var _identity = require("../util/identity");
-function mergeAll(concurrent) {
-    if (concurrent === void 0) concurrent = Infinity;
-    return (0, _mergeMap.mergeMap)((0, _identity.identity), concurrent);
-}
-
-},{"./mergeMap":"1Kzmb","../util/identity":"8Xfg6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1Kzmb":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "mergeMap", ()=>mergeMap);
-var _map = require("./map");
-var _innerFrom = require("../observable/innerFrom");
-var _lift = require("../util/lift");
-var _mergeInternals = require("./mergeInternals");
-var _isFunction = require("../util/isFunction");
-function mergeMap(project, resultSelector, concurrent) {
-    if (concurrent === void 0) concurrent = Infinity;
-    if ((0, _isFunction.isFunction)(resultSelector)) return mergeMap(function(a, i) {
-        return (0, _map.map)(function(b, ii) {
-            return resultSelector(a, b, i, ii);
-        })((0, _innerFrom.innerFrom)(project(a, i)));
-    }, concurrent);
-    else if (typeof resultSelector === "number") concurrent = resultSelector;
-    return (0, _lift.operate)(function(source, subscriber) {
-        return (0, _mergeInternals.mergeInternals)(source, subscriber, project, concurrent);
-    });
-}
-
-},{"./map":"25iUP","../observable/innerFrom":"27e4p","../util/lift":"7CiSs","./mergeInternals":"izBBV","../util/isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"25iUP":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "map", ()=>map);
-var _lift = require("../util/lift");
-var _operatorSubscriber = require("./OperatorSubscriber");
-function map(project, thisArg) {
-    return (0, _lift.operate)(function(source, subscriber) {
-        var index = 0;
-        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
-            subscriber.next(project.call(thisArg, value, index++));
-        }));
-    });
-}
-
-},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7CiSs":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "hasLift", ()=>hasLift);
-parcelHelpers.export(exports, "operate", ()=>operate);
-var _isFunction = require("./isFunction");
-function hasLift(source) {
-    return (0, _isFunction.isFunction)(source === null || source === void 0 ? void 0 : source.lift);
-}
-function operate(init) {
-    return function(source) {
-        if (hasLift(source)) return source.lift(function(liftedSource) {
-            try {
-                return init(liftedSource, this);
-            } catch (err) {
-                this.error(err);
-            }
-        });
-        throw new TypeError("Unable to lift unknown Observable type");
+function combineLatestInit(observables, scheduler, valueTransform) {
+    if (valueTransform === void 0) valueTransform = (0, _identity.identity);
+    return function(subscriber) {
+        maybeSchedule(scheduler, function() {
+            var length = observables.length;
+            var values = new Array(length);
+            var active = length;
+            var remainingFirstValues = length;
+            var _loop_1 = function(i) {
+                maybeSchedule(scheduler, function() {
+                    var source = (0, _from.from)(observables[i], scheduler);
+                    var hasFirstValue = false;
+                    source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+                        values[i] = value;
+                        if (!hasFirstValue) {
+                            hasFirstValue = true;
+                            remainingFirstValues--;
+                        }
+                        if (!remainingFirstValues) subscriber.next(valueTransform(values.slice()));
+                    }, function() {
+                        if (!--active) subscriber.complete();
+                    }));
+                }, subscriber);
+            };
+            for(var i = 0; i < length; i++)_loop_1(i);
+        }, subscriber);
     };
 }
+function maybeSchedule(scheduler, execute, subscription) {
+    if (scheduler) (0, _executeSchedule.executeSchedule)(subscription, scheduler, execute);
+    else execute();
+}
 
-},{"./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"96z9b":[function(require,module,exports) {
+},{"../Observable":"4Jvxr","../util/argsArgArrayOrObject":"sN5w7","./from":"dBWag","../util/identity":"8Xfg6","../util/mapOneOrManyArgs":"hlLvg","../util/args":"i1opM","../util/createObject":"1ntWm","../operators/OperatorSubscriber":"96z9b","../util/executeSchedule":"lF0MM","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"sN5w7":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "createOperatorSubscriber", ()=>createOperatorSubscriber);
-parcelHelpers.export(exports, "OperatorSubscriber", ()=>OperatorSubscriber);
-var _tslib = require("tslib");
-var _subscriber = require("../Subscriber");
-function createOperatorSubscriber(destination, onNext, onComplete, onError, onFinalize) {
-    return new OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize);
-}
-var OperatorSubscriber = function(_super) {
-    (0, _tslib.__extends)(OperatorSubscriber, _super);
-    function OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize, shouldUnsubscribe) {
-        var _this = _super.call(this, destination) || this;
-        _this.onFinalize = onFinalize;
-        _this.shouldUnsubscribe = shouldUnsubscribe;
-        _this._next = onNext ? function(value) {
-            try {
-                onNext(value);
-            } catch (err) {
-                destination.error(err);
-            }
-        } : _super.prototype._next;
-        _this._error = onError ? function(err) {
-            try {
-                onError(err);
-            } catch (err1) {
-                destination.error(err1);
-            } finally{
-                this.unsubscribe();
-            }
-        } : _super.prototype._error;
-        _this._complete = onComplete ? function() {
-            try {
-                onComplete();
-            } catch (err) {
-                destination.error(err);
-            } finally{
-                this.unsubscribe();
-            }
-        } : _super.prototype._complete;
-        return _this;
-    }
-    OperatorSubscriber.prototype.unsubscribe = function() {
-        var _a;
-        if (!this.shouldUnsubscribe || this.shouldUnsubscribe()) {
-            var closed_1 = this.closed;
-            _super.prototype.unsubscribe.call(this);
-            !closed_1 && ((_a = this.onFinalize) === null || _a === void 0 || _a.call(this));
+parcelHelpers.export(exports, "argsArgArrayOrObject", ()=>argsArgArrayOrObject);
+var isArray = Array.isArray;
+var getPrototypeOf = Object.getPrototypeOf, objectProto = Object.prototype, getKeys = Object.keys;
+function argsArgArrayOrObject(args) {
+    if (args.length === 1) {
+        var first_1 = args[0];
+        if (isArray(first_1)) return {
+            args: first_1,
+            keys: null
+        };
+        if (isPOJO(first_1)) {
+            var keys = getKeys(first_1);
+            return {
+                args: keys.map(function(key) {
+                    return first_1[key];
+                }),
+                keys: keys
+            };
         }
+    }
+    return {
+        args: args,
+        keys: null
     };
-    return OperatorSubscriber;
-}((0, _subscriber.Subscriber));
+}
+function isPOJO(obj) {
+    return obj && typeof obj === "object" && getPrototypeOf(obj) === objectProto;
+}
 
-},{"tslib":"lRdW5","../Subscriber":"1VFFQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"27e4p":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dBWag":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "from", ()=>from);
+var _scheduled = require("../scheduled/scheduled");
+var _innerFrom = require("./innerFrom");
+function from(input, scheduler) {
+    return scheduler ? (0, _scheduled.scheduled)(input, scheduler) : (0, _innerFrom.innerFrom)(input);
+}
+
+},{"../scheduled/scheduled":"l8eo2","./innerFrom":"27e4p","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"l8eo2":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "scheduled", ()=>scheduled);
+var _scheduleObservable = require("./scheduleObservable");
+var _schedulePromise = require("./schedulePromise");
+var _scheduleArray = require("./scheduleArray");
+var _scheduleIterable = require("./scheduleIterable");
+var _scheduleAsyncIterable = require("./scheduleAsyncIterable");
+var _isInteropObservable = require("../util/isInteropObservable");
+var _isPromise = require("../util/isPromise");
+var _isArrayLike = require("../util/isArrayLike");
+var _isIterable = require("../util/isIterable");
+var _isAsyncIterable = require("../util/isAsyncIterable");
+var _throwUnobservableError = require("../util/throwUnobservableError");
+var _isReadableStreamLike = require("../util/isReadableStreamLike");
+var _scheduleReadableStreamLike = require("./scheduleReadableStreamLike");
+function scheduled(input, scheduler) {
+    if (input != null) {
+        if ((0, _isInteropObservable.isInteropObservable)(input)) return (0, _scheduleObservable.scheduleObservable)(input, scheduler);
+        if ((0, _isArrayLike.isArrayLike)(input)) return (0, _scheduleArray.scheduleArray)(input, scheduler);
+        if ((0, _isPromise.isPromise)(input)) return (0, _schedulePromise.schedulePromise)(input, scheduler);
+        if ((0, _isAsyncIterable.isAsyncIterable)(input)) return (0, _scheduleAsyncIterable.scheduleAsyncIterable)(input, scheduler);
+        if ((0, _isIterable.isIterable)(input)) return (0, _scheduleIterable.scheduleIterable)(input, scheduler);
+        if ((0, _isReadableStreamLike.isReadableStreamLike)(input)) return (0, _scheduleReadableStreamLike.scheduleReadableStreamLike)(input, scheduler);
+    }
+    throw (0, _throwUnobservableError.createInvalidObservableTypeError)(input);
+}
+
+},{"./scheduleObservable":"g2JIf","./schedulePromise":"aQruY","./scheduleArray":"e4o4N","./scheduleIterable":"1884S","./scheduleAsyncIterable":"bCUem","../util/isInteropObservable":"7Yp6b","../util/isPromise":"aVkee","../util/isArrayLike":"i81jv","../util/isIterable":"cGlpL","../util/isAsyncIterable":"fuDY5","../util/throwUnobservableError":"Il45E","../util/isReadableStreamLike":"bnSKo","./scheduleReadableStreamLike":"6KcBM","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g2JIf":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "scheduleObservable", ()=>scheduleObservable);
+var _innerFrom = require("../observable/innerFrom");
+var _observeOn = require("../operators/observeOn");
+var _subscribeOn = require("../operators/subscribeOn");
+function scheduleObservable(input, scheduler) {
+    return (0, _innerFrom.innerFrom)(input).pipe((0, _subscribeOn.subscribeOn)(scheduler), (0, _observeOn.observeOn)(scheduler));
+}
+
+},{"../observable/innerFrom":"27e4p","../operators/observeOn":"21OcU","../operators/subscribeOn":"3SFol","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"27e4p":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "innerFrom", ()=>innerFrom);
@@ -3060,157 +3390,7 @@ function isReadableStreamLike(obj) {
     return (0, _isFunction.isFunction)(obj === null || obj === void 0 ? void 0 : obj.getReader);
 }
 
-},{"tslib":"lRdW5","./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"izBBV":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "mergeInternals", ()=>mergeInternals);
-var _innerFrom = require("../observable/innerFrom");
-var _executeSchedule = require("../util/executeSchedule");
-var _operatorSubscriber = require("./OperatorSubscriber");
-function mergeInternals(source, subscriber, project, concurrent, onBeforeNext, expand, innerSubScheduler, additionalFinalizer) {
-    var buffer = [];
-    var active = 0;
-    var index = 0;
-    var isComplete = false;
-    var checkComplete = function() {
-        if (isComplete && !buffer.length && !active) subscriber.complete();
-    };
-    var outerNext = function(value) {
-        return active < concurrent ? doInnerSub(value) : buffer.push(value);
-    };
-    var doInnerSub = function(value) {
-        expand && subscriber.next(value);
-        active++;
-        var innerComplete = false;
-        (0, _innerFrom.innerFrom)(project(value, index++)).subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(innerValue) {
-            onBeforeNext === null || onBeforeNext === void 0 || onBeforeNext(innerValue);
-            if (expand) outerNext(innerValue);
-            else subscriber.next(innerValue);
-        }, function() {
-            innerComplete = true;
-        }, undefined, function() {
-            if (innerComplete) try {
-                active--;
-                var _loop_1 = function() {
-                    var bufferedValue = buffer.shift();
-                    if (innerSubScheduler) (0, _executeSchedule.executeSchedule)(subscriber, innerSubScheduler, function() {
-                        return doInnerSub(bufferedValue);
-                    });
-                    else doInnerSub(bufferedValue);
-                };
-                while(buffer.length && active < concurrent)_loop_1();
-                checkComplete();
-            } catch (err) {
-                subscriber.error(err);
-            }
-        }));
-    };
-    source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, outerNext, function() {
-        isComplete = true;
-        checkComplete();
-    }));
-    return function() {
-        additionalFinalizer === null || additionalFinalizer === void 0 || additionalFinalizer();
-    };
-}
-
-},{"../observable/innerFrom":"27e4p","../util/executeSchedule":"lF0MM","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lF0MM":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "executeSchedule", ()=>executeSchedule);
-function executeSchedule(parentSubscription, scheduler, work, delay, repeat) {
-    if (delay === void 0) delay = 0;
-    if (repeat === void 0) repeat = false;
-    var scheduleSubscription = scheduler.schedule(function() {
-        work();
-        if (repeat) parentSubscription.add(this.schedule(null, delay));
-        else this.unsubscribe();
-    }, delay);
-    parentSubscription.add(scheduleSubscription);
-    if (!repeat) return scheduleSubscription;
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"i1opM":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "popResultSelector", ()=>popResultSelector);
-parcelHelpers.export(exports, "popScheduler", ()=>popScheduler);
-parcelHelpers.export(exports, "popNumber", ()=>popNumber);
-var _isFunction = require("./isFunction");
-var _isScheduler = require("./isScheduler");
-function last(arr) {
-    return arr[arr.length - 1];
-}
-function popResultSelector(args) {
-    return (0, _isFunction.isFunction)(last(args)) ? args.pop() : undefined;
-}
-function popScheduler(args) {
-    return (0, _isScheduler.isScheduler)(last(args)) ? args.pop() : undefined;
-}
-function popNumber(args, defaultValue) {
-    return typeof last(args) === "number" ? args.pop() : defaultValue;
-}
-
-},{"./isFunction":"dEyyK","./isScheduler":"67Brk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"67Brk":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "isScheduler", ()=>isScheduler);
-var _isFunction = require("./isFunction");
-function isScheduler(value) {
-    return value && (0, _isFunction.isFunction)(value.schedule);
-}
-
-},{"./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dBWag":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "from", ()=>from);
-var _scheduled = require("../scheduled/scheduled");
-var _innerFrom = require("./innerFrom");
-function from(input, scheduler) {
-    return scheduler ? (0, _scheduled.scheduled)(input, scheduler) : (0, _innerFrom.innerFrom)(input);
-}
-
-},{"../scheduled/scheduled":"l8eo2","./innerFrom":"27e4p","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"l8eo2":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "scheduled", ()=>scheduled);
-var _scheduleObservable = require("./scheduleObservable");
-var _schedulePromise = require("./schedulePromise");
-var _scheduleArray = require("./scheduleArray");
-var _scheduleIterable = require("./scheduleIterable");
-var _scheduleAsyncIterable = require("./scheduleAsyncIterable");
-var _isInteropObservable = require("../util/isInteropObservable");
-var _isPromise = require("../util/isPromise");
-var _isArrayLike = require("../util/isArrayLike");
-var _isIterable = require("../util/isIterable");
-var _isAsyncIterable = require("../util/isAsyncIterable");
-var _throwUnobservableError = require("../util/throwUnobservableError");
-var _isReadableStreamLike = require("../util/isReadableStreamLike");
-var _scheduleReadableStreamLike = require("./scheduleReadableStreamLike");
-function scheduled(input, scheduler) {
-    if (input != null) {
-        if ((0, _isInteropObservable.isInteropObservable)(input)) return (0, _scheduleObservable.scheduleObservable)(input, scheduler);
-        if ((0, _isArrayLike.isArrayLike)(input)) return (0, _scheduleArray.scheduleArray)(input, scheduler);
-        if ((0, _isPromise.isPromise)(input)) return (0, _schedulePromise.schedulePromise)(input, scheduler);
-        if ((0, _isAsyncIterable.isAsyncIterable)(input)) return (0, _scheduleAsyncIterable.scheduleAsyncIterable)(input, scheduler);
-        if ((0, _isIterable.isIterable)(input)) return (0, _scheduleIterable.scheduleIterable)(input, scheduler);
-        if ((0, _isReadableStreamLike.isReadableStreamLike)(input)) return (0, _scheduleReadableStreamLike.scheduleReadableStreamLike)(input, scheduler);
-    }
-    throw (0, _throwUnobservableError.createInvalidObservableTypeError)(input);
-}
-
-},{"./scheduleObservable":"g2JIf","./schedulePromise":"aQruY","./scheduleArray":"e4o4N","./scheduleIterable":"1884S","./scheduleAsyncIterable":"bCUem","../util/isInteropObservable":"7Yp6b","../util/isPromise":"aVkee","../util/isArrayLike":"i81jv","../util/isIterable":"cGlpL","../util/isAsyncIterable":"fuDY5","../util/throwUnobservableError":"Il45E","../util/isReadableStreamLike":"bnSKo","./scheduleReadableStreamLike":"6KcBM","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g2JIf":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "scheduleObservable", ()=>scheduleObservable);
-var _innerFrom = require("../observable/innerFrom");
-var _observeOn = require("../operators/observeOn");
-var _subscribeOn = require("../operators/subscribeOn");
-function scheduleObservable(input, scheduler) {
-    return (0, _innerFrom.innerFrom)(input).pipe((0, _subscribeOn.subscribeOn)(scheduler), (0, _observeOn.observeOn)(scheduler));
-}
-
-},{"../observable/innerFrom":"27e4p","../operators/observeOn":"21OcU","../operators/subscribeOn":"3SFol","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"21OcU":[function(require,module,exports) {
+},{"tslib":"lRdW5","./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"21OcU":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "observeOn", ()=>observeOn);
@@ -3236,7 +3416,99 @@ function observeOn(scheduler, delay) {
     });
 }
 
-},{"../util/executeSchedule":"lF0MM","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3SFol":[function(require,module,exports) {
+},{"../util/executeSchedule":"lF0MM","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lF0MM":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "executeSchedule", ()=>executeSchedule);
+function executeSchedule(parentSubscription, scheduler, work, delay, repeat) {
+    if (delay === void 0) delay = 0;
+    if (repeat === void 0) repeat = false;
+    var scheduleSubscription = scheduler.schedule(function() {
+        work();
+        if (repeat) parentSubscription.add(this.schedule(null, delay));
+        else this.unsubscribe();
+    }, delay);
+    parentSubscription.add(scheduleSubscription);
+    if (!repeat) return scheduleSubscription;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7CiSs":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "hasLift", ()=>hasLift);
+parcelHelpers.export(exports, "operate", ()=>operate);
+var _isFunction = require("./isFunction");
+function hasLift(source) {
+    return (0, _isFunction.isFunction)(source === null || source === void 0 ? void 0 : source.lift);
+}
+function operate(init) {
+    return function(source) {
+        if (hasLift(source)) return source.lift(function(liftedSource) {
+            try {
+                return init(liftedSource, this);
+            } catch (err) {
+                this.error(err);
+            }
+        });
+        throw new TypeError("Unable to lift unknown Observable type");
+    };
+}
+
+},{"./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"96z9b":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "createOperatorSubscriber", ()=>createOperatorSubscriber);
+parcelHelpers.export(exports, "OperatorSubscriber", ()=>OperatorSubscriber);
+var _tslib = require("tslib");
+var _subscriber = require("../Subscriber");
+function createOperatorSubscriber(destination, onNext, onComplete, onError, onFinalize) {
+    return new OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize);
+}
+var OperatorSubscriber = function(_super) {
+    (0, _tslib.__extends)(OperatorSubscriber, _super);
+    function OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize, shouldUnsubscribe) {
+        var _this = _super.call(this, destination) || this;
+        _this.onFinalize = onFinalize;
+        _this.shouldUnsubscribe = shouldUnsubscribe;
+        _this._next = onNext ? function(value) {
+            try {
+                onNext(value);
+            } catch (err) {
+                destination.error(err);
+            }
+        } : _super.prototype._next;
+        _this._error = onError ? function(err) {
+            try {
+                onError(err);
+            } catch (err1) {
+                destination.error(err1);
+            } finally{
+                this.unsubscribe();
+            }
+        } : _super.prototype._error;
+        _this._complete = onComplete ? function() {
+            try {
+                onComplete();
+            } catch (err) {
+                destination.error(err);
+            } finally{
+                this.unsubscribe();
+            }
+        } : _super.prototype._complete;
+        return _this;
+    }
+    OperatorSubscriber.prototype.unsubscribe = function() {
+        var _a;
+        if (!this.shouldUnsubscribe || this.shouldUnsubscribe()) {
+            var closed_1 = this.closed;
+            _super.prototype.unsubscribe.call(this);
+            !closed_1 && ((_a = this.onFinalize) === null || _a === void 0 || _a.call(this));
+        }
+    };
+    return OperatorSubscriber;
+}((0, _subscriber.Subscriber));
+
+},{"tslib":"lRdW5","../Subscriber":"1VFFQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3SFol":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "subscribeOn", ()=>subscribeOn);
@@ -3343,7 +3615,187 @@ function scheduleReadableStreamLike(input, scheduler) {
     return (0, _scheduleAsyncIterable.scheduleAsyncIterable)((0, _isReadableStreamLike.readableStreamLikeToAsyncGenerator)(input), scheduler);
 }
 
-},{"./scheduleAsyncIterable":"bCUem","../util/isReadableStreamLike":"bnSKo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dGHVG":[function(require,module,exports) {
+},{"./scheduleAsyncIterable":"bCUem","../util/isReadableStreamLike":"bnSKo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hlLvg":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "mapOneOrManyArgs", ()=>mapOneOrManyArgs);
+var _tslib = require("tslib");
+var _map = require("../operators/map");
+var isArray = Array.isArray;
+function callOrApply(fn, args) {
+    return isArray(args) ? fn.apply(void 0, (0, _tslib.__spreadArray)([], (0, _tslib.__read)(args))) : fn(args);
+}
+function mapOneOrManyArgs(fn) {
+    return (0, _map.map)(function(args) {
+        return callOrApply(fn, args);
+    });
+}
+
+},{"tslib":"lRdW5","../operators/map":"25iUP","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"25iUP":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "map", ()=>map);
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function map(project, thisArg) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        var index = 0;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            subscriber.next(project.call(thisArg, value, index++));
+        }));
+    });
+}
+
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"i1opM":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "popResultSelector", ()=>popResultSelector);
+parcelHelpers.export(exports, "popScheduler", ()=>popScheduler);
+parcelHelpers.export(exports, "popNumber", ()=>popNumber);
+var _isFunction = require("./isFunction");
+var _isScheduler = require("./isScheduler");
+function last(arr) {
+    return arr[arr.length - 1];
+}
+function popResultSelector(args) {
+    return (0, _isFunction.isFunction)(last(args)) ? args.pop() : undefined;
+}
+function popScheduler(args) {
+    return (0, _isScheduler.isScheduler)(last(args)) ? args.pop() : undefined;
+}
+function popNumber(args, defaultValue) {
+    return typeof last(args) === "number" ? args.pop() : defaultValue;
+}
+
+},{"./isFunction":"dEyyK","./isScheduler":"67Brk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"67Brk":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "isScheduler", ()=>isScheduler);
+var _isFunction = require("./isFunction");
+function isScheduler(value) {
+    return value && (0, _isFunction.isFunction)(value.schedule);
+}
+
+},{"./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1ntWm":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "createObject", ()=>createObject);
+function createObject(keys, values) {
+    return keys.reduce(function(result, key, i) {
+        return result[key] = values[i], result;
+    }, {});
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5g0IT":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "concat", ()=>concat);
+var _concatAll = require("../operators/concatAll");
+var _args = require("../util/args");
+var _from = require("./from");
+function concat() {
+    var args = [];
+    for(var _i = 0; _i < arguments.length; _i++)args[_i] = arguments[_i];
+    return (0, _concatAll.concatAll)()((0, _from.from)(args, (0, _args.popScheduler)(args)));
+}
+
+},{"../operators/concatAll":"77QLf","../util/args":"i1opM","./from":"dBWag","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"77QLf":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "concatAll", ()=>concatAll);
+var _mergeAll = require("./mergeAll");
+function concatAll() {
+    return (0, _mergeAll.mergeAll)(1);
+}
+
+},{"./mergeAll":"iAqyw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iAqyw":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "mergeAll", ()=>mergeAll);
+var _mergeMap = require("./mergeMap");
+var _identity = require("../util/identity");
+function mergeAll(concurrent) {
+    if (concurrent === void 0) concurrent = Infinity;
+    return (0, _mergeMap.mergeMap)((0, _identity.identity), concurrent);
+}
+
+},{"./mergeMap":"1Kzmb","../util/identity":"8Xfg6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1Kzmb":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "mergeMap", ()=>mergeMap);
+var _map = require("./map");
+var _innerFrom = require("../observable/innerFrom");
+var _lift = require("../util/lift");
+var _mergeInternals = require("./mergeInternals");
+var _isFunction = require("../util/isFunction");
+function mergeMap(project, resultSelector, concurrent) {
+    if (concurrent === void 0) concurrent = Infinity;
+    if ((0, _isFunction.isFunction)(resultSelector)) return mergeMap(function(a, i) {
+        return (0, _map.map)(function(b, ii) {
+            return resultSelector(a, b, i, ii);
+        })((0, _innerFrom.innerFrom)(project(a, i)));
+    }, concurrent);
+    else if (typeof resultSelector === "number") concurrent = resultSelector;
+    return (0, _lift.operate)(function(source, subscriber) {
+        return (0, _mergeInternals.mergeInternals)(source, subscriber, project, concurrent);
+    });
+}
+
+},{"./map":"25iUP","../observable/innerFrom":"27e4p","../util/lift":"7CiSs","./mergeInternals":"izBBV","../util/isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"izBBV":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "mergeInternals", ()=>mergeInternals);
+var _innerFrom = require("../observable/innerFrom");
+var _executeSchedule = require("../util/executeSchedule");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function mergeInternals(source, subscriber, project, concurrent, onBeforeNext, expand, innerSubScheduler, additionalFinalizer) {
+    var buffer = [];
+    var active = 0;
+    var index = 0;
+    var isComplete = false;
+    var checkComplete = function() {
+        if (isComplete && !buffer.length && !active) subscriber.complete();
+    };
+    var outerNext = function(value) {
+        return active < concurrent ? doInnerSub(value) : buffer.push(value);
+    };
+    var doInnerSub = function(value) {
+        expand && subscriber.next(value);
+        active++;
+        var innerComplete = false;
+        (0, _innerFrom.innerFrom)(project(value, index++)).subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(innerValue) {
+            onBeforeNext === null || onBeforeNext === void 0 || onBeforeNext(innerValue);
+            if (expand) outerNext(innerValue);
+            else subscriber.next(innerValue);
+        }, function() {
+            innerComplete = true;
+        }, undefined, function() {
+            if (innerComplete) try {
+                active--;
+                var _loop_1 = function() {
+                    var bufferedValue = buffer.shift();
+                    if (innerSubScheduler) (0, _executeSchedule.executeSchedule)(subscriber, innerSubScheduler, function() {
+                        return doInnerSub(bufferedValue);
+                    });
+                    else doInnerSub(bufferedValue);
+                };
+                while(buffer.length && active < concurrent)_loop_1();
+                checkComplete();
+            } catch (err) {
+                subscriber.error(err);
+            }
+        }));
+    };
+    source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, outerNext, function() {
+        isComplete = true;
+        checkComplete();
+    }));
+    return function() {
+        additionalFinalizer === null || additionalFinalizer === void 0 || additionalFinalizer();
+    };
+}
+
+},{"../observable/innerFrom":"27e4p","../util/executeSchedule":"lF0MM","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dGHVG":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "EMPTY", ()=>EMPTY);
@@ -3363,7 +3815,54 @@ function emptyScheduled(scheduler) {
     });
 }
 
-},{"../Observable":"4Jvxr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eTJLc":[function(require,module,exports) {
+},{"../Observable":"4Jvxr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"fjZ2d":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "forkJoin", ()=>forkJoin);
+var _observable = require("../Observable");
+var _argsArgArrayOrObject = require("../util/argsArgArrayOrObject");
+var _innerFrom = require("./innerFrom");
+var _args = require("../util/args");
+var _operatorSubscriber = require("../operators/OperatorSubscriber");
+var _mapOneOrManyArgs = require("../util/mapOneOrManyArgs");
+var _createObject = require("../util/createObject");
+function forkJoin() {
+    var args = [];
+    for(var _i = 0; _i < arguments.length; _i++)args[_i] = arguments[_i];
+    var resultSelector = (0, _args.popResultSelector)(args);
+    var _a = (0, _argsArgArrayOrObject.argsArgArrayOrObject)(args), sources = _a.args, keys = _a.keys;
+    var result = new (0, _observable.Observable)(function(subscriber) {
+        var length = sources.length;
+        if (!length) {
+            subscriber.complete();
+            return;
+        }
+        var values = new Array(length);
+        var remainingCompletions = length;
+        var remainingEmissions = length;
+        var _loop_1 = function(sourceIndex) {
+            var hasValue = false;
+            (0, _innerFrom.innerFrom)(sources[sourceIndex]).subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+                if (!hasValue) {
+                    hasValue = true;
+                    remainingEmissions--;
+                }
+                values[sourceIndex] = value;
+            }, function() {
+                return remainingCompletions--;
+            }, undefined, function() {
+                if (!remainingCompletions || !hasValue) {
+                    if (!remainingEmissions) subscriber.next(keys ? (0, _createObject.createObject)(keys, values) : values);
+                    subscriber.complete();
+                }
+            }));
+        };
+        for(var sourceIndex = 0; sourceIndex < length; sourceIndex++)_loop_1(sourceIndex);
+    });
+    return resultSelector ? result.pipe((0, _mapOneOrManyArgs.mapOneOrManyArgs)(resultSelector)) : result;
+}
+
+},{"../Observable":"4Jvxr","../util/argsArgArrayOrObject":"sN5w7","./innerFrom":"27e4p","../util/args":"i1opM","../operators/OperatorSubscriber":"96z9b","../util/mapOneOrManyArgs":"hlLvg","../util/createObject":"1ntWm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eTJLc":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "fromEvent", ()=>fromEvent);
@@ -3432,23 +3931,7 @@ function isEventTarget(target) {
     return (0, _isFunction.isFunction)(target.addEventListener) && (0, _isFunction.isFunction)(target.removeEventListener);
 }
 
-},{"tslib":"lRdW5","../observable/innerFrom":"27e4p","../Observable":"4Jvxr","../operators/mergeMap":"1Kzmb","../util/isArrayLike":"i81jv","../util/isFunction":"dEyyK","../util/mapOneOrManyArgs":"hlLvg","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hlLvg":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "mapOneOrManyArgs", ()=>mapOneOrManyArgs);
-var _tslib = require("tslib");
-var _map = require("../operators/map");
-var isArray = Array.isArray;
-function callOrApply(fn, args) {
-    return isArray(args) ? fn.apply(void 0, (0, _tslib.__spreadArray)([], (0, _tslib.__read)(args))) : fn(args);
-}
-function mapOneOrManyArgs(fn) {
-    return (0, _map.map)(function(args) {
-        return callOrApply(fn, args);
-    });
-}
-
-},{"tslib":"lRdW5","../operators/map":"25iUP","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5Ox1i":[function(require,module,exports) {
+},{"tslib":"lRdW5","../observable/innerFrom":"27e4p","../Observable":"4Jvxr","../operators/mergeMap":"1Kzmb","../util/isArrayLike":"i81jv","../util/isFunction":"dEyyK","../util/mapOneOrManyArgs":"hlLvg","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5Ox1i":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "interval", ()=>interval);
@@ -3499,7 +3982,25 @@ function isValidDate(value) {
     return value instanceof Date && !isNaN(value);
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lnQPU":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"c41K6":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "merge", ()=>merge);
+var _mergeAll = require("../operators/mergeAll");
+var _innerFrom = require("./innerFrom");
+var _empty = require("./empty");
+var _args = require("../util/args");
+var _from = require("./from");
+function merge() {
+    var args = [];
+    for(var _i = 0; _i < arguments.length; _i++)args[_i] = arguments[_i];
+    var scheduler = (0, _args.popScheduler)(args);
+    var concurrent = (0, _args.popNumber)(args, Infinity);
+    var sources = args;
+    return !sources.length ? (0, _empty.EMPTY) : sources.length === 1 ? (0, _innerFrom.innerFrom)(sources[0]) : (0, _mergeAll.mergeAll)(concurrent)((0, _from.from)(sources, scheduler));
+}
+
+},{"../operators/mergeAll":"iAqyw","./innerFrom":"27e4p","./empty":"dGHVG","../util/args":"i1opM","./from":"dBWag","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lnQPU":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "of", ()=>of);
@@ -3856,7 +4357,22 @@ function distinctUntilKeyChanged(key, compare) {
     });
 }
 
-},{"./distinctUntilChanged":"knFKV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gxT2U":[function(require,module,exports) {
+},{"./distinctUntilChanged":"knFKV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"2XhC4":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "endWith", ()=>endWith);
+var _tslib = require("tslib");
+var _concat = require("../observable/concat");
+var _of = require("../observable/of");
+function endWith() {
+    var values = [];
+    for(var _i = 0; _i < arguments.length; _i++)values[_i] = arguments[_i];
+    return function(source) {
+        return (0, _concat.concat)(source, (0, _of.of).apply(void 0, (0, _tslib.__spreadArray)([], (0, _tslib.__read)(values))));
+    };
+}
+
+},{"tslib":"lRdW5","../observable/concat":"5g0IT","../observable/of":"lnQPU","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gxT2U":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "exhaustMap", ()=>exhaustMap);
@@ -4017,7 +4533,63 @@ function scanInternals(accumulator, seed, hasSeed, emitOnNext, emitBeforeComplet
     };
 }
 
-},{"./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8BFGG":[function(require,module,exports) {
+},{"./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"k0C7t":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "retry", ()=>retry);
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+var _identity = require("../util/identity");
+var _timer = require("../observable/timer");
+var _innerFrom = require("../observable/innerFrom");
+function retry(configOrCount) {
+    if (configOrCount === void 0) configOrCount = Infinity;
+    var config;
+    if (configOrCount && typeof configOrCount === "object") config = configOrCount;
+    else config = {
+        count: configOrCount
+    };
+    var _a = config.count, count = _a === void 0 ? Infinity : _a, delay = config.delay, _b = config.resetOnSuccess, resetOnSuccess = _b === void 0 ? false : _b;
+    return count <= 0 ? (0, _identity.identity) : (0, _lift.operate)(function(source, subscriber) {
+        var soFar = 0;
+        var innerSub;
+        var subscribeForRetry = function() {
+            var syncUnsub = false;
+            innerSub = source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+                if (resetOnSuccess) soFar = 0;
+                subscriber.next(value);
+            }, undefined, function(err) {
+                if (soFar++ < count) {
+                    var resub_1 = function() {
+                        if (innerSub) {
+                            innerSub.unsubscribe();
+                            innerSub = null;
+                            subscribeForRetry();
+                        } else syncUnsub = true;
+                    };
+                    if (delay != null) {
+                        var notifier = typeof delay === "number" ? (0, _timer.timer)(delay) : (0, _innerFrom.innerFrom)(delay(err, soFar));
+                        var notifierSubscriber_1 = (0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function() {
+                            notifierSubscriber_1.unsubscribe();
+                            resub_1();
+                        }, function() {
+                            subscriber.complete();
+                        });
+                        notifier.subscribe(notifierSubscriber_1);
+                    } else resub_1();
+                } else subscriber.error(err);
+            }));
+            if (syncUnsub) {
+                innerSub.unsubscribe();
+                innerSub = null;
+                subscribeForRetry();
+            }
+        };
+        subscribeForRetry();
+    });
+}
+
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","../util/identity":"8Xfg6","../observable/timer":"lbPdw","../observable/innerFrom":"27e4p","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8BFGG":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "sample", ()=>sample);
@@ -4065,7 +4637,107 @@ function scan(accumulator, seed) {
     return (0, _lift.operate)((0, _scanInternals.scanInternals)(accumulator, seed, arguments.length >= 2, true));
 }
 
-},{"../util/lift":"7CiSs","./scanInternals":"7fn6o","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jbzg2":[function(require,module,exports) {
+},{"../util/lift":"7CiSs","./scanInternals":"7fn6o","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ivofG":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "share", ()=>share);
+var _tslib = require("tslib");
+var _innerFrom = require("../observable/innerFrom");
+var _subject = require("../Subject");
+var _subscriber = require("../Subscriber");
+var _lift = require("../util/lift");
+function share(options) {
+    if (options === void 0) options = {};
+    var _a = options.connector, connector = _a === void 0 ? function() {
+        return new (0, _subject.Subject)();
+    } : _a, _b = options.resetOnError, resetOnError = _b === void 0 ? true : _b, _c = options.resetOnComplete, resetOnComplete = _c === void 0 ? true : _c, _d = options.resetOnRefCountZero, resetOnRefCountZero = _d === void 0 ? true : _d;
+    return function(wrapperSource) {
+        var connection;
+        var resetConnection;
+        var subject;
+        var refCount = 0;
+        var hasCompleted = false;
+        var hasErrored = false;
+        var cancelReset = function() {
+            resetConnection === null || resetConnection === void 0 || resetConnection.unsubscribe();
+            resetConnection = undefined;
+        };
+        var reset = function() {
+            cancelReset();
+            connection = subject = undefined;
+            hasCompleted = hasErrored = false;
+        };
+        var resetAndUnsubscribe = function() {
+            var conn = connection;
+            reset();
+            conn === null || conn === void 0 || conn.unsubscribe();
+        };
+        return (0, _lift.operate)(function(source, subscriber) {
+            refCount++;
+            if (!hasErrored && !hasCompleted) cancelReset();
+            var dest = subject = subject !== null && subject !== void 0 ? subject : connector();
+            subscriber.add(function() {
+                refCount--;
+                if (refCount === 0 && !hasErrored && !hasCompleted) resetConnection = handleReset(resetAndUnsubscribe, resetOnRefCountZero);
+            });
+            dest.subscribe(subscriber);
+            if (!connection && refCount > 0) {
+                connection = new (0, _subscriber.SafeSubscriber)({
+                    next: function(value) {
+                        return dest.next(value);
+                    },
+                    error: function(err) {
+                        hasErrored = true;
+                        cancelReset();
+                        resetConnection = handleReset(reset, resetOnError, err);
+                        dest.error(err);
+                    },
+                    complete: function() {
+                        hasCompleted = true;
+                        cancelReset();
+                        resetConnection = handleReset(reset, resetOnComplete);
+                        dest.complete();
+                    }
+                });
+                (0, _innerFrom.innerFrom)(source).subscribe(connection);
+            }
+        })(wrapperSource);
+    };
+}
+function handleReset(reset, on) {
+    var args = [];
+    for(var _i = 2; _i < arguments.length; _i++)args[_i - 2] = arguments[_i];
+    if (on === true) {
+        reset();
+        return;
+    }
+    if (on === false) return;
+    var onSubscriber = new (0, _subscriber.SafeSubscriber)({
+        next: function() {
+            onSubscriber.unsubscribe();
+            reset();
+        }
+    });
+    return on.apply(void 0, (0, _tslib.__spreadArray)([], (0, _tslib.__read)(args))).subscribe(onSubscriber);
+}
+
+},{"tslib":"lRdW5","../observable/innerFrom":"27e4p","../Subject":"94RSe","../Subscriber":"1VFFQ","../util/lift":"7CiSs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"kMx2y":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "startWith", ()=>startWith);
+var _concat = require("../observable/concat");
+var _args = require("../util/args");
+var _lift = require("../util/lift");
+function startWith() {
+    var values = [];
+    for(var _i = 0; _i < arguments.length; _i++)values[_i] = arguments[_i];
+    var scheduler = (0, _args.popScheduler)(values);
+    return (0, _lift.operate)(function(source, subscriber) {
+        (scheduler ? (0, _concat.concat)(values, source, scheduler) : (0, _concat.concat)(values, source)).subscribe(subscriber);
+    });
+}
+
+},{"../observable/concat":"5g0IT","../util/args":"i1opM","../util/lift":"7CiSs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jbzg2":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "switchMap", ()=>switchMap);
@@ -4243,7 +4915,50 @@ function throttleTime(duration, scheduler, config) {
     }, config);
 }
 
-},{"../scheduler/async":"bKyC1","./throttle":"16qvo","../observable/timer":"lbPdw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6UvnK":[function(require,module,exports) {
+},{"../scheduler/async":"bKyC1","./throttle":"16qvo","../observable/timer":"lbPdw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lzK5x":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "withLatestFrom", ()=>withLatestFrom);
+var _tslib = require("tslib");
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+var _innerFrom = require("../observable/innerFrom");
+var _identity = require("../util/identity");
+var _noop = require("../util/noop");
+var _args = require("../util/args");
+function withLatestFrom() {
+    var inputs = [];
+    for(var _i = 0; _i < arguments.length; _i++)inputs[_i] = arguments[_i];
+    var project = (0, _args.popResultSelector)(inputs);
+    return (0, _lift.operate)(function(source, subscriber) {
+        var len = inputs.length;
+        var otherValues = new Array(len);
+        var hasValue = inputs.map(function() {
+            return false;
+        });
+        var ready = false;
+        var _loop_1 = function(i) {
+            (0, _innerFrom.innerFrom)(inputs[i]).subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+                otherValues[i] = value;
+                if (!ready && !hasValue[i]) {
+                    hasValue[i] = true;
+                    (ready = hasValue.every((0, _identity.identity))) && (hasValue = null);
+                }
+            }, (0, _noop.noop)));
+        };
+        for(var i = 0; i < len; i++)_loop_1(i);
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            if (ready) {
+                var values = (0, _tslib.__spreadArray)([
+                    value
+                ], (0, _tslib.__read)(otherValues));
+                subscriber.next(project ? project.apply(void 0, (0, _tslib.__spreadArray)([], (0, _tslib.__read)(values))) : values);
+            }
+        }));
+    });
+}
+
+},{"tslib":"lRdW5","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","../observable/innerFrom":"27e4p","../util/identity":"8Xfg6","../util/noop":"l8uEm","../util/args":"i1opM","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6UvnK":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "ajax", ()=>(0, _ajax.ajax));
