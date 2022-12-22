@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { Observable, map, of, range, fromEvent, from, interval, timer, pluck, mapTo, filter, reduce, take, scan, tap, first, takeWhile, takeUntil, distinctUntilChanged, distinctUntilKeyChanged, debounceTime, debounce, throttleTime, asyncScheduler, sampleTime, sample, auditTime } from "rxjs";
+import { Observable, map, of, range, fromEvent, from, interval, timer, pluck, mapTo, filter, reduce, take, scan, tap, first, takeWhile, takeUntil, distinctUntilChanged, distinctUntilKeyChanged, debounceTime, debounce, throttleTime, asyncScheduler, sampleTime, sample, auditTime, mergeAll, mergeMap, switchMap, delay, concatMap, exhaustMap, catchError, empty, EMPTY, finalize } from "rxjs";
+import { ajax } from 'rxjs/ajax'
 
 // function* hello() {
 //     // return 'Hello World!'
@@ -406,7 +407,7 @@ import { Observable, map, of, range, fromEvent, from, interval, timer, pluck, ma
 // progress$.subscribe(perecent => {
 //     progressBar.style.width = `${perecent}%`
 // });
-//#endegion
+//#endregion
 
 //#region SampleTime
 // const click$ = fromEvent(document, 'click');
@@ -427,13 +428,190 @@ import { Observable, map, of, range, fromEvent, from, interval, timer, pluck, ma
 //#endregion
 
 //#region AuditTime
-const click$ = fromEvent(document, 'click');
-const timer$ = interval(1000);
+// const click$ = fromEvent(document, 'click');
+// const timer$ = interval(1000);
 
-click$.pipe(
-    auditTime(4000),
-    map(({clientX, clientY}) => ({
-        clientX, clientY
-    }))
-).subscribe(console.log)
+// click$.pipe(
+//     auditTime(4000),
+//     map(({clientX, clientY}) => ({
+//         clientX, clientY
+//     }))
+// ).subscribe(console.log)
+//#endregion
+
+//#region Flatenning
+// const textInput = document.getElementById('text-input');
+
+// const input$ =  fromEvent(textInput,'keyup');
+
+// input$.pipe(
+//     // map(event => {
+//     //     const term = event.target.value;
+//     //     return ajax.getJSON(
+//     //         `https://api.github.com/users/${term}`
+//     //     );
+//     // }),
+//     debounceTime(1000),
+//     mergeMap(event => {
+//         const term = event.target.value;
+//         return ajax.getJSON(
+//             `https://api.github.com/users/${term}`
+//         );
+//     })
+//     // mergeAll()
+// )
+// .subscribe(console.log)
+// // .subscribe(obs => {
+// //     obs.subscribe(console.log)
+// // });
+//#endregion
+
+//#region MergeMap
+// const click$ = fromEvent(document, 'click');
+// const mousedown$ = fromEvent(document, 'mousedown');
+// const mouseup$ = fromEvent(document, 'mouseup');
+// const interval$ = interval(1000);
+
+
+// mousedown$.pipe(
+//     mergeMap(() => interval$.pipe(
+//         takeUntil(mouseup$)
+//     ))
+// ).subscribe(console.log)
+
+// const coordinates$ = click$.pipe(
+//     map(event => ({x: event.clientX, y: event.clientY}))
+// );
+
+// const coordinatesWithSave$ = coordinates$.pipe(
+//     mergeMap(coords => ajax.post('https://www.mocky.io/v2/5185415ba171ea3a00704eed', coords))
+// )
+
+// coordinatesWithSave$.subscribe(console.log);
+//#endregion
+
+//#region SwitchMap
+// const click$ = fromEvent(document, 'click');
+// const interval$ = interval(1000);
+
+// click$.pipe(
+//     switchMap(() => interval$)
+// )
+// .subscribe(console.log)
+
+// const BASE_URL = 'https://api.openbrewerydb.org/breweries';
+// const inputBox = document.querySelector('#text-input');
+// const input$ = fromEvent(inputBox, 'keyup');
+// const typeaheadContainer = document.getElementById('typeahead-container')
+
+// input$.pipe(
+//     // debounceTime(200),
+//     map( event => event.target.value),
+//     distinctUntilChanged(),
+//     switchMap(searchTerm => ajax.getJSON(`${BASE_URL}?by_name=${searchTerm}`))
+// ).subscribe(response => {
+//     typeaheadContainer.innerHTML =  response.map(b => b.name).join('<br>')
+// })
+
+//#endregion
+
+//#region ConcatMap
+// const interval$ = interval(1000);
+// const click$ = fromEvent(document, 'click');
+
+// click$.pipe(
+//     concatMap(() => interval$.pipe(take(3)))
+// ).subscribe(console.log)
+// const saveAnswer = answer => {
+//     return of(`Saved: ${answer}`).pipe(
+//         delay(1500)
+//     )
+// };
+
+// const radioButtons = document.querySelectorAll('.radio-option')
+
+// const answerChange$ = fromEvent(radioButtons, 'click');
+
+// answerChange$.pipe(
+//     concatMap(event => saveAnswer(event.target.value))
+// ).subscribe(console.log)
+//#endregion
+
+
+
+//#region ExhaustMap
+
+// const interval$ = interval(1000);
+// const click$ = fromEvent(document, 'click');
+
+// click$.pipe(
+//     exhaustMap(() => interval$.pipe(take(3)))
+// ).subscribe(console.log)
+
+// const loginButton = document.getElementById('login');
+// const login$ = fromEvent(loginButton, 'click');
+
+// const authenticateUser = () => {
+//     return ajax.post('https://reqres.in/api/login', {
+//         email: 'eve.holt@reqres.in',
+//         password: 'cityslicka'
+//     })
+// };
+
+// login$.pipe(
+//     exhaustMap(() => authenticateUser())
+// ).subscribe(console.log)
+
+//#endregion
+
+//#region CatchError
+// const BASE_URL = 'https://api.openbrewerydb.org/breweries';
+// const inputBox = document.querySelector('#text-input');
+// const input$ = fromEvent(inputBox, 'keyup');
+// const typeaheadContainer = document.getElementById('typeahead-container')
+
+// input$.pipe(
+//     // debounceTime(200),
+//     map( event => event.target.value),
+//     distinctUntilChanged(),
+//     switchMap(searchTerm => ajax.getJSON(`${BASE_URL}?by_name=${searchTerm}`).pipe(
+//         catchError((error/*, caughtto force to retry*/) => {
+//             //throw or return observable
+//             // return of(error.message)
+//             //ignore return empty obs
+//             return EMPTY;
+//             //to retry
+//             // return caught;
+//         })
+//     ))
+// ).subscribe(response => {
+//     typeaheadContainer.innerHTML =  response.map(b => b.name).join('<br>')
+// })
+
+//#endregion
+
+
+//#region HTTP Polling Solution
+const startButton = document.getElementById('start');
+const stopButton = document.getElementById('stop');
+const pollingStatus = document.getElementById('polling-status');
+const dogImage = document.getElementById('dog');
+
+const startClick$ = fromEvent(startButton, 'click');
+const stopClick$ = fromEvent(stopButton, 'click');
+
+startClick$.pipe(
+    exhaustMap(() => timer(0,5000).pipe(
+        tap(() => pollingStatus.innerHTML = 'Active'),
+        switchMap(() => ajax({
+            url:'https://random.dog/woof.json',
+            method: 'GET',
+            crossDomain: true
+        }).pipe(
+            map(response => response.response.url))
+        ),
+        takeUntil(stopClick$),
+        finalize(() => pollingStatus.innerHTML = 'Stopped')
+    ))
+).subscribe(url => dogImage.src = url)
 //#endregion

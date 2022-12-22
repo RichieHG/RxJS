@@ -85,3 +85,39 @@ Some operators are:
 * throttleTime
 * sampleTime
 * auditTime
+
+### Transformation Operators
+* Transform values as they flow through stream
+* Flattening operators
+    * mergeMap
+    * concatMap
+    * switchMap
+    * exhaustMap
+* Other operators: catchError, finalize and delay
+
+#### What's flattening
+Take an observable that emits another observable and internally subscribe to the other streams
+
+### mergeMap
+* Maps values to a new observable on emissions from source, subscribing to and emitting results of inner observables
+* By default mergeMap does not limit the number of active inner obsevables
+* Useful for HTTP requests you dont want cancelled, such al POSTs
+* Inner observables whose lifetime you will manage
+* ***NOTE:*** Remember to clean up inner observables 
+
+### switchMap
+* Switching to a new observable on emissions from source, cancelling any previously active inner observables
+* Safest default for flattening, hard to create leaks like mergeMap
+* Useful for HTTP requests that can be cancelled (GET)
+* Great for reset, pause and resume functionality
+* ***NOTE:*** Avoid switchMap when cancellation could have undesired effects, such a saves (POST)
+
+### concatMap
+* Maintains one active inner subscription, activates next observable when previous completes
+* Use when order of execution is important and inner observables have finite lifespans
+* ***NOTE:*** Be careful if you have a long running inner observables, as subsquent mapped observables could back up or never execute
+
+### exhaustMap
+* Ignores emited values when there is an active inner observable
+* Use when quick, subsequent emissions can be ignored, like refresh button or login request.
+* ***NOTE:*** Avoid if cancellation is important, or ignoring emissions from the source would cause undesired effects

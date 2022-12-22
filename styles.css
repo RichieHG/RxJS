@@ -79,3 +79,21 @@ body {
   width: 0%;
   background: #ff15b7;
 }
+
+#start, #stop{
+  color: white;
+}
+
+#start {
+  background: green;
+}
+
+#stop{
+  background: red;
+}
+
+#dog{
+  max-width: 400px;
+  max-height: 400px;
+  
+}

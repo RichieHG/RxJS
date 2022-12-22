@@ -534,6 +534,7 @@ function hmrAcceptRun(bundle, id) {
 },{}],"jL2mp":[function(require,module,exports) {
 // @ts-nocheck
 var _rxjs = require("rxjs");
+var _ajax = require("rxjs/ajax");
 // function* hello() {
 //     // return 'Hello World!'
 //     yield 'Hello',
@@ -855,7 +856,7 @@ var _rxjs = require("rxjs");
 // progress$.subscribe(perecent => {
 //     progressBar.style.width = `${perecent}%`
 // });
-//#endegion
+//#endregion
 //#region SampleTime
 // const click$ = fromEvent(document, 'click');
 // const timer$ = interval(1000);
@@ -870,15 +871,150 @@ var _rxjs = require("rxjs");
 // ).subscribe(console.log)
 //#endregion
 //#region AuditTime
-const click$ = (0, _rxjs.fromEvent)(document, "click");
-const timer$ = (0, _rxjs.interval)(1000);
-click$.pipe((0, _rxjs.auditTime)(4000), (0, _rxjs.map)(({ clientX , clientY  })=>({
-        clientX,
-        clientY
-    }))).subscribe(console.log) //#endregion
+// const click$ = fromEvent(document, 'click');
+// const timer$ = interval(1000);
+// click$.pipe(
+//     auditTime(4000),
+//     map(({clientX, clientY}) => ({
+//         clientX, clientY
+//     }))
+// ).subscribe(console.log)
+//#endregion
+//#region Flatenning
+// const textInput = document.getElementById('text-input');
+// const input$ =  fromEvent(textInput,'keyup');
+// input$.pipe(
+//     // map(event => {
+//     //     const term = event.target.value;
+//     //     return ajax.getJSON(
+//     //         `https://api.github.com/users/${term}`
+//     //     );
+//     // }),
+//     debounceTime(1000),
+//     mergeMap(event => {
+//         const term = event.target.value;
+//         return ajax.getJSON(
+//             `https://api.github.com/users/${term}`
+//         );
+//     })
+//     // mergeAll()
+// )
+// .subscribe(console.log)
+// // .subscribe(obs => {
+// //     obs.subscribe(console.log)
+// // });
+//#endregion
+//#region MergeMap
+// const click$ = fromEvent(document, 'click');
+// const mousedown$ = fromEvent(document, 'mousedown');
+// const mouseup$ = fromEvent(document, 'mouseup');
+// const interval$ = interval(1000);
+// mousedown$.pipe(
+//     mergeMap(() => interval$.pipe(
+//         takeUntil(mouseup$)
+//     ))
+// ).subscribe(console.log)
+// const coordinates$ = click$.pipe(
+//     map(event => ({x: event.clientX, y: event.clientY}))
+// );
+// const coordinatesWithSave$ = coordinates$.pipe(
+//     mergeMap(coords => ajax.post('https://www.mocky.io/v2/5185415ba171ea3a00704eed', coords))
+// )
+// coordinatesWithSave$.subscribe(console.log);
+//#endregion
+//#region SwitchMap
+// const click$ = fromEvent(document, 'click');
+// const interval$ = interval(1000);
+// click$.pipe(
+//     switchMap(() => interval$)
+// )
+// .subscribe(console.log)
+// const BASE_URL = 'https://api.openbrewerydb.org/breweries';
+// const inputBox = document.querySelector('#text-input');
+// const input$ = fromEvent(inputBox, 'keyup');
+// const typeaheadContainer = document.getElementById('typeahead-container')
+// input$.pipe(
+//     // debounceTime(200),
+//     map( event => event.target.value),
+//     distinctUntilChanged(),
+//     switchMap(searchTerm => ajax.getJSON(`${BASE_URL}?by_name=${searchTerm}`))
+// ).subscribe(response => {
+//     typeaheadContainer.innerHTML =  response.map(b => b.name).join('<br>')
+// })
+//#endregion
+//#region ConcatMap
+// const interval$ = interval(1000);
+// const click$ = fromEvent(document, 'click');
+// click$.pipe(
+//     concatMap(() => interval$.pipe(take(3)))
+// ).subscribe(console.log)
+// const saveAnswer = answer => {
+//     return of(`Saved: ${answer}`).pipe(
+//         delay(1500)
+//     )
+// };
+// const radioButtons = document.querySelectorAll('.radio-option')
+// const answerChange$ = fromEvent(radioButtons, 'click');
+// answerChange$.pipe(
+//     concatMap(event => saveAnswer(event.target.value))
+// ).subscribe(console.log)
+//#endregion
+//#region ExhaustMap
+// const interval$ = interval(1000);
+// const click$ = fromEvent(document, 'click');
+// click$.pipe(
+//     exhaustMap(() => interval$.pipe(take(3)))
+// ).subscribe(console.log)
+// const loginButton = document.getElementById('login');
+// const login$ = fromEvent(loginButton, 'click');
+// const authenticateUser = () => {
+//     return ajax.post('https://reqres.in/api/login', {
+//         email: 'eve.holt@reqres.in',
+//         password: 'cityslicka'
+//     })
+// };
+// login$.pipe(
+//     exhaustMap(() => authenticateUser())
+// ).subscribe(console.log)
+//#endregion
+//#region CatchError
+// const BASE_URL = 'https://api.openbrewerydb.org/breweries';
+// const inputBox = document.querySelector('#text-input');
+// const input$ = fromEvent(inputBox, 'keyup');
+// const typeaheadContainer = document.getElementById('typeahead-container')
+// input$.pipe(
+//     // debounceTime(200),
+//     map( event => event.target.value),
+//     distinctUntilChanged(),
+//     switchMap(searchTerm => ajax.getJSON(`${BASE_URL}?by_name=${searchTerm}`).pipe(
+//         catchError((error/*, caughtto force to retry*/) => {
+//             //throw or return observable
+//             // return of(error.message)
+//             //ignore return empty obs
+//             return EMPTY;
+//             //to retry
+//             // return caught;
+//         })
+//     ))
+// ).subscribe(response => {
+//     typeaheadContainer.innerHTML =  response.map(b => b.name).join('<br>')
+// })
+//#endregion
+//#region HTTP Polling Solution
+const startButton = document.getElementById("start");
+const stopButton = document.getElementById("stop");
+const pollingStatus = document.getElementById("polling-status");
+const dogImage = document.getElementById("dog");
+const startClick$ = (0, _rxjs.fromEvent)(startButton, "click");
+const stopClick$ = (0, _rxjs.fromEvent)(stopButton, "click");
+startClick$.pipe((0, _rxjs.exhaustMap)(()=>(0, _rxjs.timer)(0, 5000).pipe((0, _rxjs.tap)(()=>pollingStatus.innerHTML = "Active"), (0, _rxjs.switchMap)(()=>(0, _ajax.ajax)({
+            url: "https://random.dog/woof.json",
+            method: "GET",
+            crossDomain: true
+        }).pipe((0, _rxjs.map)((response)=>response.response.url))), (0, _rxjs.takeUntil)(stopClick$), (0, _rxjs.finalize)(()=>pollingStatus.innerHTML = "Stopped")))).subscribe((url)=>dogImage.src = url) //#endregion
 ;
 
-},{"rxjs":"lLy7s"}],"lLy7s":[function(require,module,exports) {
+},{"rxjs":"lLy7s","rxjs/ajax":"6UvnK"}],"lLy7s":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Observable", ()=>(0, _observable.Observable));
@@ -1221,7 +1357,7 @@ var _withLatestFrom = require("./internal/operators/withLatestFrom");
 var _zipAll = require("./internal/operators/zipAll");
 var _zipWith = require("./internal/operators/zipWith");
 
-},{"./internal/Observable":"4Jvxr","./internal/observable/ConnectableObservable":false,"./internal/symbol/observable":"byHtV","./internal/observable/dom/animationFrames":false,"./internal/Subject":false,"./internal/BehaviorSubject":false,"./internal/ReplaySubject":false,"./internal/AsyncSubject":false,"./internal/scheduler/asap":false,"./internal/scheduler/async":"bKyC1","./internal/scheduler/queue":false,"./internal/scheduler/animationFrame":false,"./internal/scheduler/VirtualTimeScheduler":false,"./internal/Scheduler":"90yvc","./internal/Subscription":"lFyhg","./internal/Subscriber":"1VFFQ","./internal/Notification":false,"./internal/util/pipe":"1GN6U","./internal/util/noop":"l8uEm","./internal/util/identity":"8Xfg6","./internal/util/isObservable":false,"./internal/lastValueFrom":false,"./internal/firstValueFrom":false,"./internal/util/ArgumentOutOfRangeError":false,"./internal/util/EmptyError":"6OnNQ","./internal/util/NotFoundError":false,"./internal/util/ObjectUnsubscribedError":false,"./internal/util/SequenceError":false,"./internal/operators/timeout":false,"./internal/util/UnsubscriptionError":"GSF7Z","./internal/observable/bindCallback":false,"./internal/observable/bindNodeCallback":false,"./internal/observable/combineLatest":false,"./internal/observable/concat":false,"./internal/observable/connectable":false,"./internal/observable/defer":false,"./internal/observable/empty":"dGHVG","./internal/observable/forkJoin":false,"./internal/observable/from":"dBWag","./internal/observable/fromEvent":"eTJLc","./internal/observable/fromEventPattern":false,"./internal/observable/generate":false,"./internal/observable/iif":false,"./internal/observable/interval":"5Ox1i","./internal/observable/merge":false,"./internal/observable/never":false,"./internal/observable/of":"lnQPU","./internal/observable/onErrorResumeNext":false,"./internal/observable/pairs":false,"./internal/observable/partition":false,"./internal/observable/race":false,"./internal/observable/range":"b4lqr","./internal/observable/throwError":false,"./internal/observable/timer":"lbPdw","./internal/observable/using":false,"./internal/observable/zip":false,"./internal/scheduled/scheduled":"l8eo2","./internal/types":"c58fk","./internal/config":"fX0gC","./internal/operators/audit":"bjPYH","./internal/operators/auditTime":"e71yK","./internal/operators/buffer":false,"./internal/operators/bufferCount":false,"./internal/operators/bufferTime":false,"./internal/operators/bufferToggle":false,"./internal/operators/bufferWhen":false,"./internal/operators/catchError":false,"./internal/operators/combineAll":false,"./internal/operators/combineLatestAll":false,"./internal/operators/combineLatestWith":false,"./internal/operators/concatAll":false,"./internal/operators/concatMap":false,"./internal/operators/concatMapTo":false,"./internal/operators/concatWith":false,"./internal/operators/connect":false,"./internal/operators/count":false,"./internal/operators/debounce":"7rG7K","./internal/operators/debounceTime":"kQLcN","./internal/operators/defaultIfEmpty":"03Bwx","./internal/operators/delay":false,"./internal/operators/delayWhen":false,"./internal/operators/dematerialize":false,"./internal/operators/distinct":false,"./internal/operators/distinctUntilChanged":"knFKV","./internal/operators/distinctUntilKeyChanged":"6inhx","./internal/operators/elementAt":false,"./internal/operators/endWith":false,"./internal/operators/every":false,"./internal/operators/exhaust":false,"./internal/operators/exhaustAll":false,"./internal/operators/exhaustMap":false,"./internal/operators/expand":false,"./internal/operators/filter":"gA0i5","./internal/operators/finalize":false,"./internal/operators/find":false,"./internal/operators/findIndex":false,"./internal/operators/first":"1Jl7y","./internal/operators/groupBy":false,"./internal/operators/ignoreElements":false,"./internal/operators/isEmpty":false,"./internal/operators/last":false,"./internal/operators/map":"25iUP","./internal/operators/mapTo":"8NiL4","./internal/operators/materialize":false,"./internal/operators/max":false,"./internal/operators/mergeAll":false,"./internal/operators/flatMap":false,"./internal/operators/mergeMap":"1Kzmb","./internal/operators/mergeMapTo":false,"./internal/operators/mergeScan":false,"./internal/operators/mergeWith":false,"./internal/operators/min":false,"./internal/operators/multicast":false,"./internal/operators/observeOn":"21OcU","./internal/operators/onErrorResumeNextWith":false,"./internal/operators/pairwise":false,"./internal/operators/pluck":"167Lv","./internal/operators/publish":false,"./internal/operators/publishBehavior":false,"./internal/operators/publishLast":false,"./internal/operators/publishReplay":false,"./internal/operators/raceWith":false,"./internal/operators/reduce":"8K6iO","./internal/operators/repeat":false,"./internal/operators/repeatWhen":false,"./internal/operators/retry":false,"./internal/operators/retryWhen":false,"./internal/operators/refCount":false,"./internal/operators/sample":"8BFGG","./internal/operators/sampleTime":"1OyWk","./internal/operators/scan":"efPFC","./internal/operators/sequenceEqual":false,"./internal/operators/share":false,"./internal/operators/shareReplay":false,"./internal/operators/single":false,"./internal/operators/skip":false,"./internal/operators/skipLast":false,"./internal/operators/skipUntil":false,"./internal/operators/skipWhile":false,"./internal/operators/startWith":false,"./internal/operators/subscribeOn":"3SFol","./internal/operators/switchAll":false,"./internal/operators/switchMap":false,"./internal/operators/switchMapTo":false,"./internal/operators/switchScan":false,"./internal/operators/take":"jxxom","./internal/operators/takeLast":false,"./internal/operators/takeUntil":"aAb4W","./internal/operators/takeWhile":"feQNd","./internal/operators/tap":"dVdZH","./internal/operators/throttle":"16qvo","./internal/operators/throttleTime":"5oUZ3","./internal/operators/throwIfEmpty":"1CMQN","./internal/operators/timeInterval":false,"./internal/operators/timeoutWith":false,"./internal/operators/timestamp":false,"./internal/operators/toArray":false,"./internal/operators/window":false,"./internal/operators/windowCount":false,"./internal/operators/windowTime":false,"./internal/operators/windowToggle":false,"./internal/operators/windowWhen":false,"./internal/operators/withLatestFrom":false,"./internal/operators/zipAll":false,"./internal/operators/zipWith":false,"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Jvxr":[function(require,module,exports) {
+},{"./internal/Observable":"4Jvxr","./internal/observable/ConnectableObservable":false,"./internal/symbol/observable":"byHtV","./internal/observable/dom/animationFrames":false,"./internal/Subject":false,"./internal/BehaviorSubject":false,"./internal/ReplaySubject":false,"./internal/AsyncSubject":false,"./internal/scheduler/asap":false,"./internal/scheduler/async":"bKyC1","./internal/scheduler/queue":false,"./internal/scheduler/animationFrame":false,"./internal/scheduler/VirtualTimeScheduler":false,"./internal/Scheduler":"90yvc","./internal/Subscription":"lFyhg","./internal/Subscriber":"1VFFQ","./internal/Notification":false,"./internal/util/pipe":"1GN6U","./internal/util/noop":"l8uEm","./internal/util/identity":"8Xfg6","./internal/util/isObservable":false,"./internal/lastValueFrom":false,"./internal/firstValueFrom":false,"./internal/util/ArgumentOutOfRangeError":false,"./internal/util/EmptyError":"6OnNQ","./internal/util/NotFoundError":false,"./internal/util/ObjectUnsubscribedError":false,"./internal/util/SequenceError":false,"./internal/operators/timeout":false,"./internal/util/UnsubscriptionError":"GSF7Z","./internal/observable/bindCallback":false,"./internal/observable/bindNodeCallback":false,"./internal/observable/combineLatest":false,"./internal/observable/concat":"5g0IT","./internal/observable/connectable":false,"./internal/observable/defer":false,"./internal/observable/empty":"dGHVG","./internal/observable/forkJoin":false,"./internal/observable/from":"dBWag","./internal/observable/fromEvent":"eTJLc","./internal/observable/fromEventPattern":false,"./internal/observable/generate":false,"./internal/observable/iif":false,"./internal/observable/interval":"5Ox1i","./internal/observable/merge":false,"./internal/observable/never":false,"./internal/observable/of":"lnQPU","./internal/observable/onErrorResumeNext":false,"./internal/observable/pairs":false,"./internal/observable/partition":false,"./internal/observable/race":false,"./internal/observable/range":"b4lqr","./internal/observable/throwError":false,"./internal/observable/timer":"lbPdw","./internal/observable/using":false,"./internal/observable/zip":false,"./internal/scheduled/scheduled":"l8eo2","./internal/types":"c58fk","./internal/config":"fX0gC","./internal/operators/audit":"bjPYH","./internal/operators/auditTime":"e71yK","./internal/operators/buffer":false,"./internal/operators/bufferCount":false,"./internal/operators/bufferTime":false,"./internal/operators/bufferToggle":false,"./internal/operators/bufferWhen":false,"./internal/operators/catchError":"jKP5Q","./internal/operators/combineAll":false,"./internal/operators/combineLatestAll":false,"./internal/operators/combineLatestWith":false,"./internal/operators/concatAll":"77QLf","./internal/operators/concatMap":"9ecCI","./internal/operators/concatMapTo":false,"./internal/operators/concatWith":false,"./internal/operators/connect":false,"./internal/operators/count":false,"./internal/operators/debounce":"7rG7K","./internal/operators/debounceTime":"kQLcN","./internal/operators/defaultIfEmpty":"03Bwx","./internal/operators/delay":"b7eNt","./internal/operators/delayWhen":"5MGDR","./internal/operators/dematerialize":false,"./internal/operators/distinct":false,"./internal/operators/distinctUntilChanged":"knFKV","./internal/operators/distinctUntilKeyChanged":"6inhx","./internal/operators/elementAt":false,"./internal/operators/endWith":false,"./internal/operators/every":false,"./internal/operators/exhaust":false,"./internal/operators/exhaustAll":false,"./internal/operators/exhaustMap":"gxT2U","./internal/operators/expand":false,"./internal/operators/filter":"gA0i5","./internal/operators/finalize":"j5G9e","./internal/operators/find":false,"./internal/operators/findIndex":false,"./internal/operators/first":"1Jl7y","./internal/operators/groupBy":false,"./internal/operators/ignoreElements":"lmnKY","./internal/operators/isEmpty":false,"./internal/operators/last":false,"./internal/operators/map":"25iUP","./internal/operators/mapTo":"8NiL4","./internal/operators/materialize":false,"./internal/operators/max":false,"./internal/operators/mergeAll":"iAqyw","./internal/operators/flatMap":false,"./internal/operators/mergeMap":"1Kzmb","./internal/operators/mergeMapTo":false,"./internal/operators/mergeScan":false,"./internal/operators/mergeWith":false,"./internal/operators/min":false,"./internal/operators/multicast":false,"./internal/operators/observeOn":"21OcU","./internal/operators/onErrorResumeNextWith":false,"./internal/operators/pairwise":false,"./internal/operators/pluck":"167Lv","./internal/operators/publish":false,"./internal/operators/publishBehavior":false,"./internal/operators/publishLast":false,"./internal/operators/publishReplay":false,"./internal/operators/raceWith":false,"./internal/operators/reduce":"8K6iO","./internal/operators/repeat":false,"./internal/operators/repeatWhen":false,"./internal/operators/retry":false,"./internal/operators/retryWhen":false,"./internal/operators/refCount":false,"./internal/operators/sample":"8BFGG","./internal/operators/sampleTime":"1OyWk","./internal/operators/scan":"efPFC","./internal/operators/sequenceEqual":false,"./internal/operators/share":false,"./internal/operators/shareReplay":false,"./internal/operators/single":false,"./internal/operators/skip":false,"./internal/operators/skipLast":false,"./internal/operators/skipUntil":false,"./internal/operators/skipWhile":false,"./internal/operators/startWith":false,"./internal/operators/subscribeOn":"3SFol","./internal/operators/switchAll":false,"./internal/operators/switchMap":"jbzg2","./internal/operators/switchMapTo":false,"./internal/operators/switchScan":false,"./internal/operators/take":"jxxom","./internal/operators/takeLast":false,"./internal/operators/takeUntil":"aAb4W","./internal/operators/takeWhile":"feQNd","./internal/operators/tap":"dVdZH","./internal/operators/throttle":"16qvo","./internal/operators/throttleTime":"5oUZ3","./internal/operators/throwIfEmpty":"1CMQN","./internal/operators/timeInterval":false,"./internal/operators/timeoutWith":false,"./internal/operators/timestamp":false,"./internal/operators/toArray":false,"./internal/operators/window":false,"./internal/operators/windowCount":false,"./internal/operators/windowTime":false,"./internal/operators/windowToggle":false,"./internal/operators/windowWhen":false,"./internal/operators/withLatestFrom":false,"./internal/operators/zipAll":false,"./internal/operators/zipWith":false,"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Jvxr":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "Observable", ()=>Observable);
@@ -2447,77 +2583,153 @@ var EmptyError = (0, _createErrorClass.createErrorClass)(function(_super) {
     };
 });
 
-},{"./createErrorClass":"i1v8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dGHVG":[function(require,module,exports) {
+},{"./createErrorClass":"i1v8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5g0IT":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "EMPTY", ()=>EMPTY);
-parcelHelpers.export(exports, "empty", ()=>empty);
-var _observable = require("../Observable");
-var EMPTY = new (0, _observable.Observable)(function(subscriber) {
-    return subscriber.complete();
-});
-function empty(scheduler) {
-    return scheduler ? emptyScheduled(scheduler) : EMPTY;
+parcelHelpers.export(exports, "concat", ()=>concat);
+var _concatAll = require("../operators/concatAll");
+var _args = require("../util/args");
+var _from = require("./from");
+function concat() {
+    var args = [];
+    for(var _i = 0; _i < arguments.length; _i++)args[_i] = arguments[_i];
+    return (0, _concatAll.concatAll)()((0, _from.from)(args, (0, _args.popScheduler)(args)));
 }
-function emptyScheduled(scheduler) {
-    return new (0, _observable.Observable)(function(subscriber) {
-        return scheduler.schedule(function() {
-            return subscriber.complete();
-        });
+
+},{"../operators/concatAll":"77QLf","../util/args":"i1opM","./from":"dBWag","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"77QLf":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "concatAll", ()=>concatAll);
+var _mergeAll = require("./mergeAll");
+function concatAll() {
+    return (0, _mergeAll.mergeAll)(1);
+}
+
+},{"./mergeAll":"iAqyw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"iAqyw":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "mergeAll", ()=>mergeAll);
+var _mergeMap = require("./mergeMap");
+var _identity = require("../util/identity");
+function mergeAll(concurrent) {
+    if (concurrent === void 0) concurrent = Infinity;
+    return (0, _mergeMap.mergeMap)((0, _identity.identity), concurrent);
+}
+
+},{"./mergeMap":"1Kzmb","../util/identity":"8Xfg6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1Kzmb":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "mergeMap", ()=>mergeMap);
+var _map = require("./map");
+var _innerFrom = require("../observable/innerFrom");
+var _lift = require("../util/lift");
+var _mergeInternals = require("./mergeInternals");
+var _isFunction = require("../util/isFunction");
+function mergeMap(project, resultSelector, concurrent) {
+    if (concurrent === void 0) concurrent = Infinity;
+    if ((0, _isFunction.isFunction)(resultSelector)) return mergeMap(function(a, i) {
+        return (0, _map.map)(function(b, ii) {
+            return resultSelector(a, b, i, ii);
+        })((0, _innerFrom.innerFrom)(project(a, i)));
+    }, concurrent);
+    else if (typeof resultSelector === "number") concurrent = resultSelector;
+    return (0, _lift.operate)(function(source, subscriber) {
+        return (0, _mergeInternals.mergeInternals)(source, subscriber, project, concurrent);
     });
 }
 
-},{"../Observable":"4Jvxr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dBWag":[function(require,module,exports) {
+},{"./map":"25iUP","../observable/innerFrom":"27e4p","../util/lift":"7CiSs","./mergeInternals":"izBBV","../util/isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"25iUP":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "from", ()=>from);
-var _scheduled = require("../scheduled/scheduled");
-var _innerFrom = require("./innerFrom");
-function from(input, scheduler) {
-    return scheduler ? (0, _scheduled.scheduled)(input, scheduler) : (0, _innerFrom.innerFrom)(input);
+parcelHelpers.export(exports, "map", ()=>map);
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function map(project, thisArg) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        var index = 0;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            subscriber.next(project.call(thisArg, value, index++));
+        }));
+    });
 }
 
-},{"../scheduled/scheduled":"l8eo2","./innerFrom":"27e4p","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"l8eo2":[function(require,module,exports) {
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7CiSs":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "scheduled", ()=>scheduled);
-var _scheduleObservable = require("./scheduleObservable");
-var _schedulePromise = require("./schedulePromise");
-var _scheduleArray = require("./scheduleArray");
-var _scheduleIterable = require("./scheduleIterable");
-var _scheduleAsyncIterable = require("./scheduleAsyncIterable");
-var _isInteropObservable = require("../util/isInteropObservable");
-var _isPromise = require("../util/isPromise");
-var _isArrayLike = require("../util/isArrayLike");
-var _isIterable = require("../util/isIterable");
-var _isAsyncIterable = require("../util/isAsyncIterable");
-var _throwUnobservableError = require("../util/throwUnobservableError");
-var _isReadableStreamLike = require("../util/isReadableStreamLike");
-var _scheduleReadableStreamLike = require("./scheduleReadableStreamLike");
-function scheduled(input, scheduler) {
-    if (input != null) {
-        if ((0, _isInteropObservable.isInteropObservable)(input)) return (0, _scheduleObservable.scheduleObservable)(input, scheduler);
-        if ((0, _isArrayLike.isArrayLike)(input)) return (0, _scheduleArray.scheduleArray)(input, scheduler);
-        if ((0, _isPromise.isPromise)(input)) return (0, _schedulePromise.schedulePromise)(input, scheduler);
-        if ((0, _isAsyncIterable.isAsyncIterable)(input)) return (0, _scheduleAsyncIterable.scheduleAsyncIterable)(input, scheduler);
-        if ((0, _isIterable.isIterable)(input)) return (0, _scheduleIterable.scheduleIterable)(input, scheduler);
-        if ((0, _isReadableStreamLike.isReadableStreamLike)(input)) return (0, _scheduleReadableStreamLike.scheduleReadableStreamLike)(input, scheduler);
+parcelHelpers.export(exports, "hasLift", ()=>hasLift);
+parcelHelpers.export(exports, "operate", ()=>operate);
+var _isFunction = require("./isFunction");
+function hasLift(source) {
+    return (0, _isFunction.isFunction)(source === null || source === void 0 ? void 0 : source.lift);
+}
+function operate(init) {
+    return function(source) {
+        if (hasLift(source)) return source.lift(function(liftedSource) {
+            try {
+                return init(liftedSource, this);
+            } catch (err) {
+                this.error(err);
+            }
+        });
+        throw new TypeError("Unable to lift unknown Observable type");
+    };
+}
+
+},{"./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"96z9b":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "createOperatorSubscriber", ()=>createOperatorSubscriber);
+parcelHelpers.export(exports, "OperatorSubscriber", ()=>OperatorSubscriber);
+var _tslib = require("tslib");
+var _subscriber = require("../Subscriber");
+function createOperatorSubscriber(destination, onNext, onComplete, onError, onFinalize) {
+    return new OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize);
+}
+var OperatorSubscriber = function(_super) {
+    (0, _tslib.__extends)(OperatorSubscriber, _super);
+    function OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize, shouldUnsubscribe) {
+        var _this = _super.call(this, destination) || this;
+        _this.onFinalize = onFinalize;
+        _this.shouldUnsubscribe = shouldUnsubscribe;
+        _this._next = onNext ? function(value) {
+            try {
+                onNext(value);
+            } catch (err) {
+                destination.error(err);
+            }
+        } : _super.prototype._next;
+        _this._error = onError ? function(err) {
+            try {
+                onError(err);
+            } catch (err1) {
+                destination.error(err1);
+            } finally{
+                this.unsubscribe();
+            }
+        } : _super.prototype._error;
+        _this._complete = onComplete ? function() {
+            try {
+                onComplete();
+            } catch (err) {
+                destination.error(err);
+            } finally{
+                this.unsubscribe();
+            }
+        } : _super.prototype._complete;
+        return _this;
     }
-    throw (0, _throwUnobservableError.createInvalidObservableTypeError)(input);
-}
+    OperatorSubscriber.prototype.unsubscribe = function() {
+        var _a;
+        if (!this.shouldUnsubscribe || this.shouldUnsubscribe()) {
+            var closed_1 = this.closed;
+            _super.prototype.unsubscribe.call(this);
+            !closed_1 && ((_a = this.onFinalize) === null || _a === void 0 || _a.call(this));
+        }
+    };
+    return OperatorSubscriber;
+}((0, _subscriber.Subscriber));
 
-},{"./scheduleObservable":"g2JIf","./schedulePromise":"aQruY","./scheduleArray":"e4o4N","./scheduleIterable":"1884S","./scheduleAsyncIterable":"bCUem","../util/isInteropObservable":"7Yp6b","../util/isPromise":"aVkee","../util/isArrayLike":"i81jv","../util/isIterable":"cGlpL","../util/isAsyncIterable":"fuDY5","../util/throwUnobservableError":"Il45E","../util/isReadableStreamLike":"bnSKo","./scheduleReadableStreamLike":"6KcBM","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g2JIf":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "scheduleObservable", ()=>scheduleObservable);
-var _innerFrom = require("../observable/innerFrom");
-var _observeOn = require("../operators/observeOn");
-var _subscribeOn = require("../operators/subscribeOn");
-function scheduleObservable(input, scheduler) {
-    return (0, _innerFrom.innerFrom)(input).pipe((0, _subscribeOn.subscribeOn)(scheduler), (0, _observeOn.observeOn)(scheduler));
-}
-
-},{"../observable/innerFrom":"27e4p","../operators/observeOn":"21OcU","../operators/subscribeOn":"3SFol","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"27e4p":[function(require,module,exports) {
+},{"tslib":"lRdW5","../Subscriber":"1VFFQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"27e4p":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "innerFrom", ()=>innerFrom);
@@ -2848,7 +3060,157 @@ function isReadableStreamLike(obj) {
     return (0, _isFunction.isFunction)(obj === null || obj === void 0 ? void 0 : obj.getReader);
 }
 
-},{"tslib":"lRdW5","./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"21OcU":[function(require,module,exports) {
+},{"tslib":"lRdW5","./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"izBBV":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "mergeInternals", ()=>mergeInternals);
+var _innerFrom = require("../observable/innerFrom");
+var _executeSchedule = require("../util/executeSchedule");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function mergeInternals(source, subscriber, project, concurrent, onBeforeNext, expand, innerSubScheduler, additionalFinalizer) {
+    var buffer = [];
+    var active = 0;
+    var index = 0;
+    var isComplete = false;
+    var checkComplete = function() {
+        if (isComplete && !buffer.length && !active) subscriber.complete();
+    };
+    var outerNext = function(value) {
+        return active < concurrent ? doInnerSub(value) : buffer.push(value);
+    };
+    var doInnerSub = function(value) {
+        expand && subscriber.next(value);
+        active++;
+        var innerComplete = false;
+        (0, _innerFrom.innerFrom)(project(value, index++)).subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(innerValue) {
+            onBeforeNext === null || onBeforeNext === void 0 || onBeforeNext(innerValue);
+            if (expand) outerNext(innerValue);
+            else subscriber.next(innerValue);
+        }, function() {
+            innerComplete = true;
+        }, undefined, function() {
+            if (innerComplete) try {
+                active--;
+                var _loop_1 = function() {
+                    var bufferedValue = buffer.shift();
+                    if (innerSubScheduler) (0, _executeSchedule.executeSchedule)(subscriber, innerSubScheduler, function() {
+                        return doInnerSub(bufferedValue);
+                    });
+                    else doInnerSub(bufferedValue);
+                };
+                while(buffer.length && active < concurrent)_loop_1();
+                checkComplete();
+            } catch (err) {
+                subscriber.error(err);
+            }
+        }));
+    };
+    source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, outerNext, function() {
+        isComplete = true;
+        checkComplete();
+    }));
+    return function() {
+        additionalFinalizer === null || additionalFinalizer === void 0 || additionalFinalizer();
+    };
+}
+
+},{"../observable/innerFrom":"27e4p","../util/executeSchedule":"lF0MM","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lF0MM":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "executeSchedule", ()=>executeSchedule);
+function executeSchedule(parentSubscription, scheduler, work, delay, repeat) {
+    if (delay === void 0) delay = 0;
+    if (repeat === void 0) repeat = false;
+    var scheduleSubscription = scheduler.schedule(function() {
+        work();
+        if (repeat) parentSubscription.add(this.schedule(null, delay));
+        else this.unsubscribe();
+    }, delay);
+    parentSubscription.add(scheduleSubscription);
+    if (!repeat) return scheduleSubscription;
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"i1opM":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "popResultSelector", ()=>popResultSelector);
+parcelHelpers.export(exports, "popScheduler", ()=>popScheduler);
+parcelHelpers.export(exports, "popNumber", ()=>popNumber);
+var _isFunction = require("./isFunction");
+var _isScheduler = require("./isScheduler");
+function last(arr) {
+    return arr[arr.length - 1];
+}
+function popResultSelector(args) {
+    return (0, _isFunction.isFunction)(last(args)) ? args.pop() : undefined;
+}
+function popScheduler(args) {
+    return (0, _isScheduler.isScheduler)(last(args)) ? args.pop() : undefined;
+}
+function popNumber(args, defaultValue) {
+    return typeof last(args) === "number" ? args.pop() : defaultValue;
+}
+
+},{"./isFunction":"dEyyK","./isScheduler":"67Brk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"67Brk":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "isScheduler", ()=>isScheduler);
+var _isFunction = require("./isFunction");
+function isScheduler(value) {
+    return value && (0, _isFunction.isFunction)(value.schedule);
+}
+
+},{"./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dBWag":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "from", ()=>from);
+var _scheduled = require("../scheduled/scheduled");
+var _innerFrom = require("./innerFrom");
+function from(input, scheduler) {
+    return scheduler ? (0, _scheduled.scheduled)(input, scheduler) : (0, _innerFrom.innerFrom)(input);
+}
+
+},{"../scheduled/scheduled":"l8eo2","./innerFrom":"27e4p","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"l8eo2":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "scheduled", ()=>scheduled);
+var _scheduleObservable = require("./scheduleObservable");
+var _schedulePromise = require("./schedulePromise");
+var _scheduleArray = require("./scheduleArray");
+var _scheduleIterable = require("./scheduleIterable");
+var _scheduleAsyncIterable = require("./scheduleAsyncIterable");
+var _isInteropObservable = require("../util/isInteropObservable");
+var _isPromise = require("../util/isPromise");
+var _isArrayLike = require("../util/isArrayLike");
+var _isIterable = require("../util/isIterable");
+var _isAsyncIterable = require("../util/isAsyncIterable");
+var _throwUnobservableError = require("../util/throwUnobservableError");
+var _isReadableStreamLike = require("../util/isReadableStreamLike");
+var _scheduleReadableStreamLike = require("./scheduleReadableStreamLike");
+function scheduled(input, scheduler) {
+    if (input != null) {
+        if ((0, _isInteropObservable.isInteropObservable)(input)) return (0, _scheduleObservable.scheduleObservable)(input, scheduler);
+        if ((0, _isArrayLike.isArrayLike)(input)) return (0, _scheduleArray.scheduleArray)(input, scheduler);
+        if ((0, _isPromise.isPromise)(input)) return (0, _schedulePromise.schedulePromise)(input, scheduler);
+        if ((0, _isAsyncIterable.isAsyncIterable)(input)) return (0, _scheduleAsyncIterable.scheduleAsyncIterable)(input, scheduler);
+        if ((0, _isIterable.isIterable)(input)) return (0, _scheduleIterable.scheduleIterable)(input, scheduler);
+        if ((0, _isReadableStreamLike.isReadableStreamLike)(input)) return (0, _scheduleReadableStreamLike.scheduleReadableStreamLike)(input, scheduler);
+    }
+    throw (0, _throwUnobservableError.createInvalidObservableTypeError)(input);
+}
+
+},{"./scheduleObservable":"g2JIf","./schedulePromise":"aQruY","./scheduleArray":"e4o4N","./scheduleIterable":"1884S","./scheduleAsyncIterable":"bCUem","../util/isInteropObservable":"7Yp6b","../util/isPromise":"aVkee","../util/isArrayLike":"i81jv","../util/isIterable":"cGlpL","../util/isAsyncIterable":"fuDY5","../util/throwUnobservableError":"Il45E","../util/isReadableStreamLike":"bnSKo","./scheduleReadableStreamLike":"6KcBM","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"g2JIf":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "scheduleObservable", ()=>scheduleObservable);
+var _innerFrom = require("../observable/innerFrom");
+var _observeOn = require("../operators/observeOn");
+var _subscribeOn = require("../operators/subscribeOn");
+function scheduleObservable(input, scheduler) {
+    return (0, _innerFrom.innerFrom)(input).pipe((0, _subscribeOn.subscribeOn)(scheduler), (0, _observeOn.observeOn)(scheduler));
+}
+
+},{"../observable/innerFrom":"27e4p","../operators/observeOn":"21OcU","../operators/subscribeOn":"3SFol","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"21OcU":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "observeOn", ()=>observeOn);
@@ -2874,99 +3236,7 @@ function observeOn(scheduler, delay) {
     });
 }
 
-},{"../util/executeSchedule":"lF0MM","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lF0MM":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "executeSchedule", ()=>executeSchedule);
-function executeSchedule(parentSubscription, scheduler, work, delay, repeat) {
-    if (delay === void 0) delay = 0;
-    if (repeat === void 0) repeat = false;
-    var scheduleSubscription = scheduler.schedule(function() {
-        work();
-        if (repeat) parentSubscription.add(this.schedule(null, delay));
-        else this.unsubscribe();
-    }, delay);
-    parentSubscription.add(scheduleSubscription);
-    if (!repeat) return scheduleSubscription;
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7CiSs":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "hasLift", ()=>hasLift);
-parcelHelpers.export(exports, "operate", ()=>operate);
-var _isFunction = require("./isFunction");
-function hasLift(source) {
-    return (0, _isFunction.isFunction)(source === null || source === void 0 ? void 0 : source.lift);
-}
-function operate(init) {
-    return function(source) {
-        if (hasLift(source)) return source.lift(function(liftedSource) {
-            try {
-                return init(liftedSource, this);
-            } catch (err) {
-                this.error(err);
-            }
-        });
-        throw new TypeError("Unable to lift unknown Observable type");
-    };
-}
-
-},{"./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"96z9b":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "createOperatorSubscriber", ()=>createOperatorSubscriber);
-parcelHelpers.export(exports, "OperatorSubscriber", ()=>OperatorSubscriber);
-var _tslib = require("tslib");
-var _subscriber = require("../Subscriber");
-function createOperatorSubscriber(destination, onNext, onComplete, onError, onFinalize) {
-    return new OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize);
-}
-var OperatorSubscriber = function(_super) {
-    (0, _tslib.__extends)(OperatorSubscriber, _super);
-    function OperatorSubscriber(destination, onNext, onComplete, onError, onFinalize, shouldUnsubscribe) {
-        var _this = _super.call(this, destination) || this;
-        _this.onFinalize = onFinalize;
-        _this.shouldUnsubscribe = shouldUnsubscribe;
-        _this._next = onNext ? function(value) {
-            try {
-                onNext(value);
-            } catch (err) {
-                destination.error(err);
-            }
-        } : _super.prototype._next;
-        _this._error = onError ? function(err) {
-            try {
-                onError(err);
-            } catch (err1) {
-                destination.error(err1);
-            } finally{
-                this.unsubscribe();
-            }
-        } : _super.prototype._error;
-        _this._complete = onComplete ? function() {
-            try {
-                onComplete();
-            } catch (err) {
-                destination.error(err);
-            } finally{
-                this.unsubscribe();
-            }
-        } : _super.prototype._complete;
-        return _this;
-    }
-    OperatorSubscriber.prototype.unsubscribe = function() {
-        var _a;
-        if (!this.shouldUnsubscribe || this.shouldUnsubscribe()) {
-            var closed_1 = this.closed;
-            _super.prototype.unsubscribe.call(this);
-            !closed_1 && ((_a = this.onFinalize) === null || _a === void 0 || _a.call(this));
-        }
-    };
-    return OperatorSubscriber;
-}((0, _subscriber.Subscriber));
-
-},{"tslib":"lRdW5","../Subscriber":"1VFFQ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3SFol":[function(require,module,exports) {
+},{"../util/executeSchedule":"lF0MM","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3SFol":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "subscribeOn", ()=>subscribeOn);
@@ -3073,7 +3343,27 @@ function scheduleReadableStreamLike(input, scheduler) {
     return (0, _scheduleAsyncIterable.scheduleAsyncIterable)((0, _isReadableStreamLike.readableStreamLikeToAsyncGenerator)(input), scheduler);
 }
 
-},{"./scheduleAsyncIterable":"bCUem","../util/isReadableStreamLike":"bnSKo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eTJLc":[function(require,module,exports) {
+},{"./scheduleAsyncIterable":"bCUem","../util/isReadableStreamLike":"bnSKo","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dGHVG":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "EMPTY", ()=>EMPTY);
+parcelHelpers.export(exports, "empty", ()=>empty);
+var _observable = require("../Observable");
+var EMPTY = new (0, _observable.Observable)(function(subscriber) {
+    return subscriber.complete();
+});
+function empty(scheduler) {
+    return scheduler ? emptyScheduled(scheduler) : EMPTY;
+}
+function emptyScheduled(scheduler) {
+    return new (0, _observable.Observable)(function(subscriber) {
+        return scheduler.schedule(function() {
+            return subscriber.complete();
+        });
+    });
+}
+
+},{"../Observable":"4Jvxr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"eTJLc":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "fromEvent", ()=>fromEvent);
@@ -3142,98 +3432,7 @@ function isEventTarget(target) {
     return (0, _isFunction.isFunction)(target.addEventListener) && (0, _isFunction.isFunction)(target.removeEventListener);
 }
 
-},{"tslib":"lRdW5","../observable/innerFrom":"27e4p","../Observable":"4Jvxr","../operators/mergeMap":"1Kzmb","../util/isArrayLike":"i81jv","../util/isFunction":"dEyyK","../util/mapOneOrManyArgs":"hlLvg","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1Kzmb":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "mergeMap", ()=>mergeMap);
-var _map = require("./map");
-var _innerFrom = require("../observable/innerFrom");
-var _lift = require("../util/lift");
-var _mergeInternals = require("./mergeInternals");
-var _isFunction = require("../util/isFunction");
-function mergeMap(project, resultSelector, concurrent) {
-    if (concurrent === void 0) concurrent = Infinity;
-    if ((0, _isFunction.isFunction)(resultSelector)) return mergeMap(function(a, i) {
-        return (0, _map.map)(function(b, ii) {
-            return resultSelector(a, b, i, ii);
-        })((0, _innerFrom.innerFrom)(project(a, i)));
-    }, concurrent);
-    else if (typeof resultSelector === "number") concurrent = resultSelector;
-    return (0, _lift.operate)(function(source, subscriber) {
-        return (0, _mergeInternals.mergeInternals)(source, subscriber, project, concurrent);
-    });
-}
-
-},{"./map":"25iUP","../observable/innerFrom":"27e4p","../util/lift":"7CiSs","./mergeInternals":"izBBV","../util/isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"25iUP":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "map", ()=>map);
-var _lift = require("../util/lift");
-var _operatorSubscriber = require("./OperatorSubscriber");
-function map(project, thisArg) {
-    return (0, _lift.operate)(function(source, subscriber) {
-        var index = 0;
-        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
-            subscriber.next(project.call(thisArg, value, index++));
-        }));
-    });
-}
-
-},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"izBBV":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "mergeInternals", ()=>mergeInternals);
-var _innerFrom = require("../observable/innerFrom");
-var _executeSchedule = require("../util/executeSchedule");
-var _operatorSubscriber = require("./OperatorSubscriber");
-function mergeInternals(source, subscriber, project, concurrent, onBeforeNext, expand, innerSubScheduler, additionalFinalizer) {
-    var buffer = [];
-    var active = 0;
-    var index = 0;
-    var isComplete = false;
-    var checkComplete = function() {
-        if (isComplete && !buffer.length && !active) subscriber.complete();
-    };
-    var outerNext = function(value) {
-        return active < concurrent ? doInnerSub(value) : buffer.push(value);
-    };
-    var doInnerSub = function(value) {
-        expand && subscriber.next(value);
-        active++;
-        var innerComplete = false;
-        (0, _innerFrom.innerFrom)(project(value, index++)).subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(innerValue) {
-            onBeforeNext === null || onBeforeNext === void 0 || onBeforeNext(innerValue);
-            if (expand) outerNext(innerValue);
-            else subscriber.next(innerValue);
-        }, function() {
-            innerComplete = true;
-        }, undefined, function() {
-            if (innerComplete) try {
-                active--;
-                var _loop_1 = function() {
-                    var bufferedValue = buffer.shift();
-                    if (innerSubScheduler) (0, _executeSchedule.executeSchedule)(subscriber, innerSubScheduler, function() {
-                        return doInnerSub(bufferedValue);
-                    });
-                    else doInnerSub(bufferedValue);
-                };
-                while(buffer.length && active < concurrent)_loop_1();
-                checkComplete();
-            } catch (err) {
-                subscriber.error(err);
-            }
-        }));
-    };
-    source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, outerNext, function() {
-        isComplete = true;
-        checkComplete();
-    }));
-    return function() {
-        additionalFinalizer === null || additionalFinalizer === void 0 || additionalFinalizer();
-    };
-}
-
-},{"../observable/innerFrom":"27e4p","../util/executeSchedule":"lF0MM","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hlLvg":[function(require,module,exports) {
+},{"tslib":"lRdW5","../observable/innerFrom":"27e4p","../Observable":"4Jvxr","../operators/mergeMap":"1Kzmb","../util/isArrayLike":"i81jv","../util/isFunction":"dEyyK","../util/mapOneOrManyArgs":"hlLvg","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hlLvg":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "mapOneOrManyArgs", ()=>mapOneOrManyArgs);
@@ -3292,16 +3491,7 @@ function timer(dueTime, intervalOrScheduler, scheduler) {
     });
 }
 
-},{"../Observable":"4Jvxr","../scheduler/async":"bKyC1","../util/isScheduler":"67Brk","../util/isDate":"6QILL","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"67Brk":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "isScheduler", ()=>isScheduler);
-var _isFunction = require("./isFunction");
-function isScheduler(value) {
-    return value && (0, _isFunction.isFunction)(value.schedule);
-}
-
-},{"./isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6QILL":[function(require,module,exports) {
+},{"../Observable":"4Jvxr","../scheduler/async":"bKyC1","../util/isScheduler":"67Brk","../util/isDate":"6QILL","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6QILL":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "isValidDate", ()=>isValidDate);
@@ -3322,28 +3512,7 @@ function of() {
     return (0, _from.from)(args, scheduler);
 }
 
-},{"../util/args":"i1opM","./from":"dBWag","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"i1opM":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "popResultSelector", ()=>popResultSelector);
-parcelHelpers.export(exports, "popScheduler", ()=>popScheduler);
-parcelHelpers.export(exports, "popNumber", ()=>popNumber);
-var _isFunction = require("./isFunction");
-var _isScheduler = require("./isScheduler");
-function last(arr) {
-    return arr[arr.length - 1];
-}
-function popResultSelector(args) {
-    return (0, _isFunction.isFunction)(last(args)) ? args.pop() : undefined;
-}
-function popScheduler(args) {
-    return (0, _isScheduler.isScheduler)(last(args)) ? args.pop() : undefined;
-}
-function popNumber(args, defaultValue) {
-    return typeof last(args) === "number" ? args.pop() : defaultValue;
-}
-
-},{"./isFunction":"dEyyK","./isScheduler":"67Brk","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"b4lqr":[function(require,module,exports) {
+},{"../util/args":"i1opM","./from":"dBWag","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"b4lqr":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "range", ()=>range);
@@ -3428,7 +3597,45 @@ function auditTime(duration, scheduler) {
     });
 }
 
-},{"../scheduler/async":"bKyC1","./audit":"bjPYH","../observable/timer":"lbPdw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7rG7K":[function(require,module,exports) {
+},{"../scheduler/async":"bKyC1","./audit":"bjPYH","../observable/timer":"lbPdw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jKP5Q":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "catchError", ()=>catchError);
+var _innerFrom = require("../observable/innerFrom");
+var _operatorSubscriber = require("./OperatorSubscriber");
+var _lift = require("../util/lift");
+function catchError(selector) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        var innerSub = null;
+        var syncUnsub = false;
+        var handledResult;
+        innerSub = source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, undefined, undefined, function(err) {
+            handledResult = (0, _innerFrom.innerFrom)(selector(err, catchError(selector)(source)));
+            if (innerSub) {
+                innerSub.unsubscribe();
+                innerSub = null;
+                handledResult.subscribe(subscriber);
+            } else syncUnsub = true;
+        }));
+        if (syncUnsub) {
+            innerSub.unsubscribe();
+            innerSub = null;
+            handledResult.subscribe(subscriber);
+        }
+    });
+}
+
+},{"../observable/innerFrom":"27e4p","./OperatorSubscriber":"96z9b","../util/lift":"7CiSs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"9ecCI":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "concatMap", ()=>concatMap);
+var _mergeMap = require("./mergeMap");
+var _isFunction = require("../util/isFunction");
+function concatMap(project, resultSelector) {
+    return (0, _isFunction.isFunction)(resultSelector) ? (0, _mergeMap.mergeMap)(project, resultSelector, 1) : (0, _mergeMap.mergeMap)(project, 1);
+}
+
+},{"./mergeMap":"1Kzmb","../util/isFunction":"dEyyK","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"7rG7K":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "debounce", ()=>debounce);
@@ -3533,7 +3740,85 @@ function defaultIfEmpty(defaultValue) {
     });
 }
 
-},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"knFKV":[function(require,module,exports) {
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"b7eNt":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "delay", ()=>delay);
+var _async = require("../scheduler/async");
+var _delayWhen = require("./delayWhen");
+var _timer = require("../observable/timer");
+function delay(due, scheduler) {
+    if (scheduler === void 0) scheduler = (0, _async.asyncScheduler);
+    var duration = (0, _timer.timer)(due, scheduler);
+    return (0, _delayWhen.delayWhen)(function() {
+        return duration;
+    });
+}
+
+},{"../scheduler/async":"bKyC1","./delayWhen":"5MGDR","../observable/timer":"lbPdw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"5MGDR":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "delayWhen", ()=>delayWhen);
+var _concat = require("../observable/concat");
+var _take = require("./take");
+var _ignoreElements = require("./ignoreElements");
+var _mapTo = require("./mapTo");
+var _mergeMap = require("./mergeMap");
+function delayWhen(delayDurationSelector, subscriptionDelay) {
+    if (subscriptionDelay) return function(source) {
+        return (0, _concat.concat)(subscriptionDelay.pipe((0, _take.take)(1), (0, _ignoreElements.ignoreElements)()), source.pipe(delayWhen(delayDurationSelector)));
+    };
+    return (0, _mergeMap.mergeMap)(function(value, index) {
+        return delayDurationSelector(value, index).pipe((0, _take.take)(1), (0, _mapTo.mapTo)(value));
+    });
+}
+
+},{"../observable/concat":"5g0IT","./take":"jxxom","./ignoreElements":"lmnKY","./mapTo":"8NiL4","./mergeMap":"1Kzmb","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jxxom":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "take", ()=>take);
+var _empty = require("../observable/empty");
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function take(count) {
+    return count <= 0 ? function() {
+        return 0, _empty.EMPTY;
+    } : (0, _lift.operate)(function(source, subscriber) {
+        var seen = 0;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            if (++seen <= count) {
+                subscriber.next(value);
+                if (count <= seen) subscriber.complete();
+            }
+        }));
+    });
+}
+
+},{"../observable/empty":"dGHVG","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"lmnKY":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "ignoreElements", ()=>ignoreElements);
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+var _noop = require("../util/noop");
+function ignoreElements() {
+    return (0, _lift.operate)(function(source, subscriber) {
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, (0, _noop.noop)));
+    });
+}
+
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","../util/noop":"l8uEm","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8NiL4":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "mapTo", ()=>mapTo);
+var _map = require("./map");
+function mapTo(value) {
+    return (0, _map.map)(function() {
+        return value;
+    });
+}
+
+},{"./map":"25iUP","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"knFKV":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "distinctUntilChanged", ()=>distinctUntilChanged);
@@ -3571,7 +3856,42 @@ function distinctUntilKeyChanged(key, compare) {
     });
 }
 
-},{"./distinctUntilChanged":"knFKV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gA0i5":[function(require,module,exports) {
+},{"./distinctUntilChanged":"knFKV","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gxT2U":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "exhaustMap", ()=>exhaustMap);
+var _map = require("./map");
+var _innerFrom = require("../observable/innerFrom");
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function exhaustMap(project, resultSelector) {
+    if (resultSelector) return function(source) {
+        return source.pipe(exhaustMap(function(a, i) {
+            return (0, _innerFrom.innerFrom)(project(a, i)).pipe((0, _map.map)(function(b, ii) {
+                return resultSelector(a, b, i, ii);
+            }));
+        }));
+    };
+    return (0, _lift.operate)(function(source, subscriber) {
+        var index = 0;
+        var innerSub = null;
+        var isComplete = false;
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(outerValue) {
+            if (!innerSub) {
+                innerSub = (0, _operatorSubscriber.createOperatorSubscriber)(subscriber, undefined, function() {
+                    innerSub = null;
+                    isComplete && subscriber.complete();
+                });
+                (0, _innerFrom.innerFrom)(project(outerValue, index++)).subscribe(innerSub);
+            }
+        }, function() {
+            isComplete = true;
+            !innerSub && subscriber.complete();
+        }));
+    });
+}
+
+},{"./map":"25iUP","../observable/innerFrom":"27e4p","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gA0i5":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "filter", ()=>filter);
@@ -3586,7 +3906,22 @@ function filter(predicate, thisArg) {
     });
 }
 
-},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1Jl7y":[function(require,module,exports) {
+},{"../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"j5G9e":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "finalize", ()=>finalize);
+var _lift = require("../util/lift");
+function finalize(callback) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        try {
+            source.subscribe(subscriber);
+        } finally{
+            subscriber.add(callback);
+        }
+    });
+}
+
+},{"../util/lift":"7CiSs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1Jl7y":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "first", ()=>first);
@@ -3607,28 +3942,7 @@ function first(predicate, defaultValue) {
     };
 }
 
-},{"../util/EmptyError":"6OnNQ","./filter":"gA0i5","./take":"jxxom","./defaultIfEmpty":"03Bwx","./throwIfEmpty":"1CMQN","../util/identity":"8Xfg6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jxxom":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "take", ()=>take);
-var _empty = require("../observable/empty");
-var _lift = require("../util/lift");
-var _operatorSubscriber = require("./OperatorSubscriber");
-function take(count) {
-    return count <= 0 ? function() {
-        return 0, _empty.EMPTY;
-    } : (0, _lift.operate)(function(source, subscriber) {
-        var seen = 0;
-        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
-            if (++seen <= count) {
-                subscriber.next(value);
-                if (count <= seen) subscriber.complete();
-            }
-        }));
-    });
-}
-
-},{"../observable/empty":"dGHVG","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1CMQN":[function(require,module,exports) {
+},{"../util/EmptyError":"6OnNQ","./filter":"gA0i5","./take":"jxxom","./defaultIfEmpty":"03Bwx","./throwIfEmpty":"1CMQN","../util/identity":"8Xfg6","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"1CMQN":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "throwIfEmpty", ()=>throwIfEmpty);
@@ -3651,18 +3965,7 @@ function defaultErrorFactory() {
     return new (0, _emptyError.EmptyError)();
 }
 
-},{"../util/EmptyError":"6OnNQ","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"8NiL4":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "mapTo", ()=>mapTo);
-var _map = require("./map");
-function mapTo(value) {
-    return (0, _map.map)(function() {
-        return value;
-    });
-}
-
-},{"./map":"25iUP","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"167Lv":[function(require,module,exports) {
+},{"../util/EmptyError":"6OnNQ","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"167Lv":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "pluck", ()=>pluck);
@@ -3762,7 +4065,39 @@ function scan(accumulator, seed) {
     return (0, _lift.operate)((0, _scanInternals.scanInternals)(accumulator, seed, arguments.length >= 2, true));
 }
 
-},{"../util/lift":"7CiSs","./scanInternals":"7fn6o","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aAb4W":[function(require,module,exports) {
+},{"../util/lift":"7CiSs","./scanInternals":"7fn6o","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jbzg2":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "switchMap", ()=>switchMap);
+var _innerFrom = require("../observable/innerFrom");
+var _lift = require("../util/lift");
+var _operatorSubscriber = require("./OperatorSubscriber");
+function switchMap(project, resultSelector) {
+    return (0, _lift.operate)(function(source, subscriber) {
+        var innerSubscriber = null;
+        var index = 0;
+        var isComplete = false;
+        var checkComplete = function() {
+            return isComplete && !innerSubscriber && subscriber.complete();
+        };
+        source.subscribe((0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(value) {
+            innerSubscriber === null || innerSubscriber === void 0 || innerSubscriber.unsubscribe();
+            var innerIndex = 0;
+            var outerIndex = index++;
+            (0, _innerFrom.innerFrom)(project(value, outerIndex)).subscribe(innerSubscriber = (0, _operatorSubscriber.createOperatorSubscriber)(subscriber, function(innerValue) {
+                return subscriber.next(resultSelector ? resultSelector(value, innerValue, outerIndex, innerIndex++) : innerValue);
+            }, function() {
+                innerSubscriber = null;
+                checkComplete();
+            }));
+        }, function() {
+            isComplete = true;
+            checkComplete();
+        }));
+    });
+}
+
+},{"../observable/innerFrom":"27e4p","../util/lift":"7CiSs","./OperatorSubscriber":"96z9b","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"aAb4W":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "takeUntil", ()=>takeUntil);
@@ -3908,6 +4243,355 @@ function throttleTime(duration, scheduler, config) {
     }, config);
 }
 
-},{"../scheduler/async":"bKyC1","./throttle":"16qvo","../observable/timer":"lbPdw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["j8jph","jL2mp"], "jL2mp", "parcelRequirea2a8")
+},{"../scheduler/async":"bKyC1","./throttle":"16qvo","../observable/timer":"lbPdw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"6UvnK":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "ajax", ()=>(0, _ajax.ajax));
+parcelHelpers.export(exports, "AjaxError", ()=>(0, _errors.AjaxError));
+parcelHelpers.export(exports, "AjaxTimeoutError", ()=>(0, _errors.AjaxTimeoutError));
+parcelHelpers.export(exports, "AjaxResponse", ()=>(0, _ajaxResponse.AjaxResponse));
+var _ajax = require("../internal/ajax/ajax");
+var _errors = require("../internal/ajax/errors");
+var _ajaxResponse = require("../internal/ajax/AjaxResponse");
+
+},{"../internal/ajax/ajax":"b1TTk","../internal/ajax/errors":"ee8vX","../internal/ajax/AjaxResponse":"kDyUx","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"b1TTk":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "ajax", ()=>ajax);
+parcelHelpers.export(exports, "fromAjax", ()=>fromAjax);
+var _tslib = require("tslib");
+var _map = require("../operators/map");
+var _observable = require("../Observable");
+var _ajaxResponse = require("./AjaxResponse");
+var _errors = require("./errors");
+function ajaxGet(url, headers) {
+    return ajax({
+        method: "GET",
+        url: url,
+        headers: headers
+    });
+}
+function ajaxPost(url, body, headers) {
+    return ajax({
+        method: "POST",
+        url: url,
+        body: body,
+        headers: headers
+    });
+}
+function ajaxDelete(url, headers) {
+    return ajax({
+        method: "DELETE",
+        url: url,
+        headers: headers
+    });
+}
+function ajaxPut(url, body, headers) {
+    return ajax({
+        method: "PUT",
+        url: url,
+        body: body,
+        headers: headers
+    });
+}
+function ajaxPatch(url, body, headers) {
+    return ajax({
+        method: "PATCH",
+        url: url,
+        body: body,
+        headers: headers
+    });
+}
+var mapResponse = (0, _map.map)(function(x) {
+    return x.response;
+});
+function ajaxGetJSON(url, headers) {
+    return mapResponse(ajax({
+        method: "GET",
+        url: url,
+        headers: headers
+    }));
+}
+var ajax = function() {
+    var create = function(urlOrConfig) {
+        var config = typeof urlOrConfig === "string" ? {
+            url: urlOrConfig
+        } : urlOrConfig;
+        return fromAjax(config);
+    };
+    create.get = ajaxGet;
+    create.post = ajaxPost;
+    create.delete = ajaxDelete;
+    create.put = ajaxPut;
+    create.patch = ajaxPatch;
+    create.getJSON = ajaxGetJSON;
+    return create;
+}();
+var UPLOAD = "upload";
+var DOWNLOAD = "download";
+var LOADSTART = "loadstart";
+var PROGRESS = "progress";
+var LOAD = "load";
+function fromAjax(init) {
+    return new (0, _observable.Observable)(function(destination) {
+        var _a, _b;
+        var config = (0, _tslib.__assign)({
+            async: true,
+            crossDomain: false,
+            withCredentials: false,
+            method: "GET",
+            timeout: 0,
+            responseType: "json"
+        }, init);
+        var queryParams = config.queryParams, configuredBody = config.body, configuredHeaders = config.headers;
+        var url = config.url;
+        if (!url) throw new TypeError("url is required");
+        if (queryParams) {
+            var searchParams_1;
+            if (url.includes("?")) {
+                var parts = url.split("?");
+                if (2 < parts.length) throw new TypeError("invalid url");
+                searchParams_1 = new URLSearchParams(parts[1]);
+                new URLSearchParams(queryParams).forEach(function(value, key) {
+                    return searchParams_1.set(key, value);
+                });
+                url = parts[0] + "?" + searchParams_1;
+            } else {
+                searchParams_1 = new URLSearchParams(queryParams);
+                url = url + "?" + searchParams_1;
+            }
+        }
+        var headers = {};
+        if (configuredHeaders) {
+            for(var key in configuredHeaders)if (configuredHeaders.hasOwnProperty(key)) headers[key.toLowerCase()] = configuredHeaders[key];
+        }
+        var crossDomain = config.crossDomain;
+        if (!crossDomain && !("x-requested-with" in headers)) headers["x-requested-with"] = "XMLHttpRequest";
+        var withCredentials = config.withCredentials, xsrfCookieName = config.xsrfCookieName, xsrfHeaderName = config.xsrfHeaderName;
+        if ((withCredentials || !crossDomain) && xsrfCookieName && xsrfHeaderName) {
+            var xsrfCookie = (_b = (_a = document === null || document === void 0 ? void 0 : document.cookie.match(new RegExp("(^|;\\s*)(" + xsrfCookieName + ")=([^;]*)"))) === null || _a === void 0 ? void 0 : _a.pop()) !== null && _b !== void 0 ? _b : "";
+            if (xsrfCookie) headers[xsrfHeaderName] = xsrfCookie;
+        }
+        var body = extractContentTypeAndMaybeSerializeBody(configuredBody, headers);
+        var _request = (0, _tslib.__assign)((0, _tslib.__assign)({}, config), {
+            url: url,
+            headers: headers,
+            body: body
+        });
+        var xhr;
+        xhr = init.createXHR ? init.createXHR() : new XMLHttpRequest();
+        var progressSubscriber_1 = init.progressSubscriber, _c = init.includeDownloadProgress, includeDownloadProgress = _c === void 0 ? false : _c, _d = init.includeUploadProgress, includeUploadProgress = _d === void 0 ? false : _d;
+        var addErrorEvent = function(type, errorFactory) {
+            xhr.addEventListener(type, function() {
+                var _a;
+                var error = errorFactory();
+                (_a = progressSubscriber_1 === null || progressSubscriber_1 === void 0 ? void 0 : progressSubscriber_1.error) === null || _a === void 0 || _a.call(progressSubscriber_1, error);
+                destination.error(error);
+            });
+        };
+        addErrorEvent("timeout", function() {
+            return new (0, _errors.AjaxTimeoutError)(xhr, _request);
+        });
+        addErrorEvent("abort", function() {
+            return new (0, _errors.AjaxError)("aborted", xhr, _request);
+        });
+        var createResponse_1 = function(direction, event) {
+            return new (0, _ajaxResponse.AjaxResponse)(event, xhr, _request, direction + "_" + event.type);
+        };
+        var addProgressEvent_1 = function(target, type, direction) {
+            target.addEventListener(type, function(event) {
+                destination.next(createResponse_1(direction, event));
+            });
+        };
+        if (includeUploadProgress) [
+            LOADSTART,
+            PROGRESS,
+            LOAD
+        ].forEach(function(type) {
+            return addProgressEvent_1(xhr.upload, type, UPLOAD);
+        });
+        if (progressSubscriber_1) [
+            LOADSTART,
+            PROGRESS
+        ].forEach(function(type) {
+            return xhr.upload.addEventListener(type, function(e) {
+                var _a;
+                return (_a = progressSubscriber_1 === null || progressSubscriber_1 === void 0 ? void 0 : progressSubscriber_1.next) === null || _a === void 0 ? void 0 : _a.call(progressSubscriber_1, e);
+            });
+        });
+        if (includeDownloadProgress) [
+            LOADSTART,
+            PROGRESS
+        ].forEach(function(type) {
+            return addProgressEvent_1(xhr, type, DOWNLOAD);
+        });
+        var emitError_1 = function(status) {
+            var msg = "ajax error" + (status ? " " + status : "");
+            destination.error(new (0, _errors.AjaxError)(msg, xhr, _request));
+        };
+        xhr.addEventListener("error", function(e) {
+            var _a;
+            (_a = progressSubscriber_1 === null || progressSubscriber_1 === void 0 ? void 0 : progressSubscriber_1.error) === null || _a === void 0 || _a.call(progressSubscriber_1, e);
+            emitError_1();
+        });
+        xhr.addEventListener(LOAD, function(event) {
+            var _a, _b;
+            var status = xhr.status;
+            if (status < 400) {
+                (_a = progressSubscriber_1 === null || progressSubscriber_1 === void 0 ? void 0 : progressSubscriber_1.complete) === null || _a === void 0 || _a.call(progressSubscriber_1);
+                var response = void 0;
+                try {
+                    response = createResponse_1(DOWNLOAD, event);
+                } catch (err) {
+                    destination.error(err);
+                    return;
+                }
+                destination.next(response);
+                destination.complete();
+            } else {
+                (_b = progressSubscriber_1 === null || progressSubscriber_1 === void 0 ? void 0 : progressSubscriber_1.error) === null || _b === void 0 || _b.call(progressSubscriber_1, event);
+                emitError_1(status);
+            }
+        });
+        var user = _request.user, method = _request.method, async = _request.async;
+        if (user) xhr.open(method, url, async, user, _request.password);
+        else xhr.open(method, url, async);
+        if (async) {
+            xhr.timeout = _request.timeout;
+            xhr.responseType = _request.responseType;
+        }
+        if ("withCredentials" in xhr) xhr.withCredentials = _request.withCredentials;
+        for(var key in headers)if (headers.hasOwnProperty(key)) xhr.setRequestHeader(key, headers[key]);
+        if (body) xhr.send(body);
+        else xhr.send();
+        return function() {
+            if (xhr && xhr.readyState !== 4) xhr.abort();
+        };
+    });
+}
+function extractContentTypeAndMaybeSerializeBody(body, headers) {
+    var _a;
+    if (!body || typeof body === "string" || isFormData(body) || isURLSearchParams(body) || isArrayBuffer(body) || isFile(body) || isBlob(body) || isReadableStream(body)) return body;
+    if (isArrayBufferView(body)) return body.buffer;
+    if (typeof body === "object") {
+        headers["content-type"] = (_a = headers["content-type"]) !== null && _a !== void 0 ? _a : "application/json;charset=utf-8";
+        return JSON.stringify(body);
+    }
+    throw new TypeError("Unknown body type");
+}
+var _toString = Object.prototype.toString;
+function toStringCheck(obj, name) {
+    return _toString.call(obj) === "[object " + name + "]";
+}
+function isArrayBuffer(body) {
+    return toStringCheck(body, "ArrayBuffer");
+}
+function isFile(body) {
+    return toStringCheck(body, "File");
+}
+function isBlob(body) {
+    return toStringCheck(body, "Blob");
+}
+function isArrayBufferView(body) {
+    return typeof ArrayBuffer !== "undefined" && ArrayBuffer.isView(body);
+}
+function isFormData(body) {
+    return typeof FormData !== "undefined" && body instanceof FormData;
+}
+function isURLSearchParams(body) {
+    return typeof URLSearchParams !== "undefined" && body instanceof URLSearchParams;
+}
+function isReadableStream(body) {
+    return typeof ReadableStream !== "undefined" && body instanceof ReadableStream;
+}
+
+},{"tslib":"lRdW5","../operators/map":"25iUP","../Observable":"4Jvxr","./AjaxResponse":"kDyUx","./errors":"ee8vX","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"kDyUx":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "AjaxResponse", ()=>AjaxResponse);
+var _getXHRResponse = require("./getXHRResponse");
+var AjaxResponse = function() {
+    function AjaxResponse(originalEvent, xhr, request, type) {
+        if (type === void 0) type = "download_load";
+        this.originalEvent = originalEvent;
+        this.xhr = xhr;
+        this.request = request;
+        this.type = type;
+        var status = xhr.status, responseType = xhr.responseType;
+        this.status = status !== null && status !== void 0 ? status : 0;
+        this.responseType = responseType !== null && responseType !== void 0 ? responseType : "";
+        var allHeaders = xhr.getAllResponseHeaders();
+        this.responseHeaders = allHeaders ? allHeaders.split("\n").reduce(function(headers, line) {
+            var index = line.indexOf(": ");
+            headers[line.slice(0, index)] = line.slice(index + 2);
+            return headers;
+        }, {}) : {};
+        this.response = (0, _getXHRResponse.getXHRResponse)(xhr);
+        var loaded = originalEvent.loaded, total = originalEvent.total;
+        this.loaded = loaded;
+        this.total = total;
+    }
+    return AjaxResponse;
+}();
+
+},{"./getXHRResponse":"jY2IT","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"jY2IT":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "getXHRResponse", ()=>getXHRResponse);
+function getXHRResponse(xhr) {
+    switch(xhr.responseType){
+        case "json":
+            if ("response" in xhr) return xhr.response;
+            else {
+                var ieXHR = xhr;
+                return JSON.parse(ieXHR.responseText);
+            }
+        case "document":
+            return xhr.responseXML;
+        case "text":
+        default:
+            if ("response" in xhr) return xhr.response;
+            else {
+                var ieXHR = xhr;
+                return ieXHR.responseText;
+            }
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"ee8vX":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "AjaxError", ()=>AjaxError);
+parcelHelpers.export(exports, "AjaxTimeoutError", ()=>AjaxTimeoutError);
+var _getXHRResponse = require("./getXHRResponse");
+var _createErrorClass = require("../util/createErrorClass");
+var AjaxError = (0, _createErrorClass.createErrorClass)(function(_super) {
+    return function AjaxErrorImpl(message, xhr, request) {
+        this.message = message;
+        this.name = "AjaxError";
+        this.xhr = xhr;
+        this.request = request;
+        this.status = xhr.status;
+        this.responseType = xhr.responseType;
+        var response;
+        try {
+            response = (0, _getXHRResponse.getXHRResponse)(xhr);
+        } catch (err) {
+            response = xhr.responseText;
+        }
+        this.response = response;
+    };
+});
+var AjaxTimeoutError = function() {
+    function AjaxTimeoutErrorImpl(xhr, request) {
+        AjaxError.call(this, "ajax timeout", xhr, request);
+        this.name = "AjaxTimeoutError";
+        return this;
+    }
+    AjaxTimeoutErrorImpl.prototype = Object.create(AjaxError.prototype);
+    return AjaxTimeoutErrorImpl;
+}();
+
+},{"./getXHRResponse":"jY2IT","../util/createErrorClass":"i1v8Q","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["j8jph","jL2mp"], "jL2mp", "parcelRequirea2a8")
 
 //# sourceMappingURL=index.22dc3ac3.js.map
