@@ -130,3 +130,28 @@ Join multiple observables into a single stream:
 * Operator like: startWith, concat, merge, combineLatest, forkJoin
 * Also sharing observable execution with the share operator
 
+### [Subject](https://rxjs.dev/guide/subject)
+* Is an **observable**:
+    * Has a pipe method
+    * You can subscribe to it to receive inmediate values
+* Is also an **observer**:
+    * Has next, error and complete methods which can be ivoke to send notifications to subscribers of the subject
+* Are multicast:
+    * The subscribers of a subject are registered and share an ejecution of an observable.
+    * We can send a single notifications to multiple subscribers at once.
+* Subject.next(0): the subject will deliver the new value to all subscribers.
+* Subject.complete(): will send a complete notification.
+* You can subscribe your subject to any observable and this one will notify any event to its subscribers.
+* There are some types of Subjects:
+    * ***BehaviourSubject***: share all executions and also an initial value. And per each new subscribir this kind of subject emits the current state.
+    * ***ReplySubject***: reply a certain number of values to subscribers. With not a initial value. If we don't define a number of replies, it will reply all previous values to new subscribers.
+    * ***AsyncSubject***: only emit the last value before completion.
+
+
+### withLatestFrom
+Returns the latest state from an Observable
+
+### shareReply
+Turns unicast observable to multicast, replying all values to new subscribers (by default)
+Put 1 as first param new subscribers only will receive the last value
+Use the second param to define life time of the new values to share. If a subscriber comes after that time it won't receive the value

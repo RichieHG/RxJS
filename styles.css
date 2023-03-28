@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
 
 html,
 body {
@@ -7,7 +7,7 @@ body {
 }
 
 html {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 62.5%;
   font-weight: normal;
   letter-spacing: 0.2px;
@@ -33,7 +33,7 @@ body {
 .logo-ultimate {
   height: 30px;
   width: 30px;
-  background: url('https://drive.google.com/uc?export=view&id=1gjKk20q5MgptDtuXqc0gAPFcSmkcHJZA')
+  background: url("https://drive.google.com/uc?export=view&id=1gjKk20q5MgptDtuXqc0gAPFcSmkcHJZA")
     no-repeat center center;
   background-size: contain;
 }
@@ -60,8 +60,8 @@ body {
 }
 
 #app h1:before {
-  content: '';
-  background: url('https://drive.google.com/uc?export=view&id=1Dbmt6tlQ-fvMf6VCAGEjr5jZewymhdUE')
+  content: "";
+  background: url("https://drive.google.com/uc?export=view&id=1Dbmt6tlQ-fvMf6VCAGEjr5jZewymhdUE")
     no-repeat center center;
   background-size: contain;
   width: 34px;
@@ -72,15 +72,16 @@ body {
   top: 6px;
 }
 
-.progress-bar{
+.progress-bar {
   position: fixed;
-  top:0;
+  top: 0;
   height: 4px;
   width: 0%;
   background: #ff15b7;
 }
 
-#start, #pause{
+#start,
+#pause {
   color: white;
   border-radius: 4px;
   padding: 8px 16px;
@@ -91,17 +92,82 @@ body {
   background: green;
 }
 
-#pause{
+#pause {
   background: red;
 }
 
-#dog{
+#dog {
   max-width: 400px;
   max-height: 400px;
-  
 }
 
-
-#abort{
+#abort {
   background: red;
+}
+
+#loading-overlay {
+  /* position*/
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  /* colors */
+  background-color: #451771;
+  color: white;
+  /* alignment */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* animation */
+  transition: all 0.5s ease-out;
+  animation-duration: 500ms;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+  to{
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fadeOutUp {
+  from{
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+#loading-overlay{
+  animation-name: fadeOutUp;
+}
+
+#loading-overlay.open{
+  animation-name: fadeInDown;
+}
+
+#loading-overlay h1:before {
+  content: "";
+  background: url("https://drive.google.com/uc?export=view&id=1Dbmt6tlQ-fvMf6VCAGEjr5jZewymhdUE")
+    no-repeat center center;
+  background-size: contain;
+  width: 34px;
+  height: 34px;
+  display: inline-block;
+  margin-right: 14px;
+  position: relative;
+  top: 6px;
 }

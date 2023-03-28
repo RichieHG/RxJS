@@ -775,48 +775,48 @@ import { ajax } from 'rxjs/ajax'
 
 
 //#region Mortgage Calculator
-function calculateMortgage(interest, loanAmount, loanLength){
-    const calculatedInterest = interest/1200;
-    const total = loanAmount * calculatedInterest / (1 - Math.pow(1/(1+calculatedInterest),loanLength));
-    return total.toFixed(2);
-}
+// function calculateMortgage(interest, loanAmount, loanLength){
+//     const calculatedInterest = interest/1200;
+//     const total = loanAmount * calculatedInterest / (1 - Math.pow(1/(1+calculatedInterest),loanLength));
+//     return total.toFixed(2);
+// }
 
-const loanAmount = document.getElementById('loanAmount');
-const interest = document.getElementById('interest');
-const loanLength = document.querySelectorAll('.loanLength');
-const expected = document.getElementById('expected');
+// const loanAmount = document.getElementById('loanAmount');
+// const interest = document.getElementById('interest');
+// const loanLength = document.querySelectorAll('.loanLength');
+// const expected = document.getElementById('expected');
 
-const createInputValueStream = element => {
-    return fromEvent(element, 'input').pipe(
-        map(event => parseFloat(event.target.value))
-    )
-};
+// const createInputValueStream = element => {
+//     return fromEvent(element, 'input').pipe(
+//         map(event => parseFloat(event.target.value))
+//     )
+// };
 
-const saveResponse = mortgageAmount => {
-    return of(mortgageAmount).pipe(delay(1000))
-}
+// const saveResponse = mortgageAmount => {
+//     return of(mortgageAmount).pipe(delay(1000))
+// }
 
-const interest$ = createInputValueStream(interest);
-const loanAmount$ = createInputValueStream(loanAmount);
-const loanLength$ = createInputValueStream(loanLength);
+// const interest$ = createInputValueStream(interest);
+// const loanAmount$ = createInputValueStream(loanAmount);
+// const loanLength$ = createInputValueStream(loanLength);
 
-const calculation$ = combineLatest([
-    loanAmount$,
-    interest$,
-    loanLength$
-]).pipe(
-    map(([loanAmount, interest, loanLength]) =>{
-        return calculateMortgage(interest, loanAmount, loanLength)
-    }),
-    tap(console.log),
-    filter(mortgageAmount =>  !isNaN(mortgageAmount)),
-    share()
-);
-calculation$.subscribe(mortgageAmount =>{
-    expected.innerHTML = mortgageAmount
-})
+// const calculation$ = combineLatest([
+//     loanAmount$,
+//     interest$,
+//     loanLength$
+// ]).pipe(
+//     map(([loanAmount, interest, loanLength]) =>{
+//         return calculateMortgage(interest, loanAmount, loanLength)
+//     }),
+//     tap(console.log),
+//     filter(mortgageAmount =>  !isNaN(mortgageAmount)),
+//     share()
+// );
+// calculation$.subscribe(mortgageAmount =>{
+//     expected.innerHTML = mortgageAmount
+// })
 
-calculation$.pipe(
-    mergeMap(mortgageAmount => saveResponse(mortgageAmount))
-).subscribe()
+// calculation$.pipe(
+//     mergeMap(mortgageAmount => saveResponse(mortgageAmount))
+// ).subscribe()
 //#endregion
