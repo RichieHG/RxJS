@@ -1,4 +1,4 @@
-import { AsyncSubject, BehaviorSubject, ReplaySubject, Subject, fromEvent, interval, mergeMap, multicast, share, shareReplay, tap } from "rxjs";
+import { AsyncSubject, BehaviorSubject, ReplaySubject, Subject, asyncScheduler, fromEvent, interval, mergeMap, multicast, share, shareReplay, tap, of, observeOn, delay, scheduled, asapScheduler, range, animationFrameScheduler, takeWhile, queueScheduler } from "rxjs";
 import { loadingService } from "./loadingService";
 import { ObservableStore } from "./store";
 import { ajax } from 'rxjs/ajax';
@@ -27,14 +27,14 @@ const observer = {
 //#endregion
 
 //#region Manage Loading State
-const loadingOverlay = document.getElementById('loading-overlay');
-loadingService.loadingStatus$.subscribe(isLoading => {
-    if(isLoading) loadingOverlay.classList.add('open');
-    else loadingOverlay.classList.remove('open');
-});
+// const loadingOverlay = document.getElementById('loading-overlay');
+// loadingService.loadingStatus$.subscribe(isLoading => {
+//     if(isLoading) loadingOverlay.classList.add('open');
+//     else loadingOverlay.classList.remove('open');
+// });
 
 // loadingService.showLoading();
-setTimeout(() => loadingService.hideLoading(),3000);
+// setTimeout(() => loadingService.hideLoading(),3000);
 //#endregion
 
 //#region Multicast and Share
@@ -119,14 +119,106 @@ setTimeout(() => loadingService.hideLoading(),3000);
 //#endregion
 
 //#region AsyncSubject
-const subject = new AsyncSubject();
+// const subject = new AsyncSubject();
 
-subject.subscribe(observer);
-subject.subscribe(observer);
+// subject.subscribe(observer);
+// subject.subscribe(observer);
 
-subject.next('Hello');
-subject.next('World');
-subject.next('Goodbye');
+// subject.next('Hello');
+// subject.next('World');
+// subject.next('Goodbye');
 
-subject.complete();
+// subject.complete();
+//#endregion
+
+//#region AsyncSchedulers
+
+// work, delay?, state?
+// const sub = asyncScheduler.schedule(
+//     console.log,
+//     2000,
+//     'Hello World!'
+// );
+// console.log('sync');
+// sub.unsubscribe();
+
+// of(7,8,9).pipe(
+//     //use delay!
+//     tap(val => console.log('from tap', val)),
+//     delay(3000),
+//     observeOn(asyncScheduler)
+//     // observeOn(asyncScheduler,3000)
+
+// ).subscribe(observer);
+
+
+// of(4,5,6, asyncScheduler).subscribe(observer); //deprecated
+// scheduled([4,5,6], asyncScheduler).subscribe(observer);
+// of(1,2,3).subscribe(observer);
+// console.log('sync');
+//#endregion
+
+//#region ASAP Scheduler
+// asyncScheduler.schedule(() => console.log('asyncScheduler'));
+// asapScheduler.schedule(() => console.log('asapcheduler'));
+// queueMicrotask(() => console.log('from microtaks'));
+// Promise.resolve('from promise').then(console.log);
+
+// range(1,5).subscribe(observer); //Emit first the range then the console.log
+// range(1,5, asapScheduler).subscribe(observer); // DEPRECATED Emit first the console.log then the range
+// range(1,5).pipe(observeOn(asapScheduler)).subscribe(observer); // Emit first the console.log then the range
+
+// const counter = document.getElementById('counter');
+// range(1,10000)
+// .pipe(observeOn(asapScheduler))
+// .subscribe(val => {
+//     counter.innerHTML = val.toString()
+// }); 
+// range(1,10000)
+// .pipe(observeOn(asyncScheduler))
+// .subscribe(val => {
+//     counter.innerHTML = val.toString()
+// }); 
+// console.log('synchronous console.log');
+//#endregion
+
+//#region AnimationFrameScheduler
+// const ball = document.getElementById('ball');
+// var reverse = false;
+// animationFrameScheduler.schedule(function(position){
+//     ball.style.transform = `translate3d(0, ${position}px, 0)`;
+
+//     if(position <= 300 && !reverse)
+//         this.schedule(position + 1);
+//     else{
+//         reverse = true;
+//         if(position == 0){
+//             reverse = false;
+//             this.schedule(position + 1);
+//         }
+//         else
+//             this.schedule(position - 1)
+//     }
+// }, 0, 0);
+
+// interval(0, animationFrameScheduler)
+//     .pipe(
+//         takeWhile(val => val <= 300)
+//     )
+//     .subscribe(val => {
+//         ball.style.transform = `translate3d(0, ${val}px, 0)`;
+//     });
+//#endregion
+
+//#region QueueScheduler
+queueScheduler.schedule(() => {
+    queueScheduler.schedule(() => {
+        queueScheduler.schedule(() => {
+            console.log('second inner queue');
+        });
+        console.log('inner queue');
+    });
+    console.log('first queue');
+});
+console.log('sync');
 //#endregion

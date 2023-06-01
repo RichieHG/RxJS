@@ -155,3 +155,41 @@ Returns the latest state from an Observable
 Turns unicast observable to multicast, replying all values to new subscribers (by default)
 Put 1 as first param new subscribers only will receive the last value
 Use the second param to define life time of the new values to share. If a subscriber comes after that time it won't receive the value
+
+### Schedulers
+Are use for:
+* Time based operations and operators
+* Testing
+* Expouse them using observeOn and subscribeOn
+
+We can switch the following:
+* setTimeout -> asyncScheduler
+* queueMicrotask -> asapScheduler
+* requestAnimationFrame -> animationFrameScheduler
+And also we have:
+* queueScheduler
+
+Each scheduler has three args:
+* Function to invoke
+* Delay: we can use null to omit delay and use the default behaviour
+* State
+
+#### Use schedulers with observables
+* Scheduler as arg
+* observOn operator
+* subscribeOn operator
+
+
+#### Asynchronous behaviour
+It can be triggered by 
+* setTimeout
+* queueMicrotask 
+* requestAnimationFrame
+
+**asyncScheduler** is so similar to setTimeout
+
+**asapScheduler** works like **queueMicrotask** and **Promise.resolve**
+
+**animationFrameScheduler** is similar to requestAnimationFrame
+
+**queueScheduler** by default executes synchronously tasks, on queue. Is used to control the execution path for other task inside a main task. And do it after the task pass to completed state.

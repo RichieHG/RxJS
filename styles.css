@@ -171,3 +171,15 @@ body {
   position: relative;
   top: 6px;
 }
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+#ball{
+  width: 100px;
+  height: 100px;
+  background-color: blue;
+  border-radius: 50%;
+}
