@@ -193,3 +193,11 @@ It can be triggered by
 **animationFrameScheduler** is similar to requestAnimationFrame
 
 **queueScheduler** by default executes synchronously tasks, on queue. Is used to control the execution path for other task inside a main task. And do it after the task pass to completed state.
+
+## Marble Testing
+'-' each dash represents a frame of virtual time
+'[a-z0-9]' represents emitted values
+'#' represents errors
+'()' represents synchronous groupings
+'|' represents completed state
+

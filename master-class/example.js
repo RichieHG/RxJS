@@ -211,14 +211,18 @@ const observer = {
 //#endregion
 
 //#region QueueScheduler
-queueScheduler.schedule(() => {
-    queueScheduler.schedule(() => {
-        queueScheduler.schedule(() => {
-            console.log('second inner queue');
-        });
-        console.log('inner queue');
-    });
-    console.log('first queue');
-});
-console.log('sync');
+// queueScheduler.schedule(() => {
+//     queueScheduler.schedule(() => {
+//         queueScheduler.schedule(() => {
+//             console.log('second inner queue');
+//         });
+//         console.log('inner queue');
+//     });
+//     console.log('first queue');
+// });
+// console.log('sync');
+//#endregion
+
+//#region Marble Testing
+
 //#endregion
